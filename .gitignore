@@ -41,7 +41,9 @@ mcnabventures/vendor/
 .sass-cache/
 mcnabventures/.sass-cache/
 
-# --- Plugins (ACF PRO & other plugins should not be committed by default) ---
-plugins/**
+# --- Plugins ---
+# By default we ignore plugins, but we allow ACF PRO to be committed.
 !plugins/.gitkeep
+!plugins/classic-editor/*
+
 
