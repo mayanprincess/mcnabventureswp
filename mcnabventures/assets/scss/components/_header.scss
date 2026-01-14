@@ -1,0 +1,257 @@
+// ==========================================================================
+// SITE HEADER - McNab Ventures
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: $color-white;
+  transition: all $transition-base;
+  
+  // Scrolled state - frosted glass effect
+  &.is-scrolled {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  
+  body.admin-bar & {
+    top: 32px;
+    
+    @media screen and (max-width: 782px) {
+      top: 46px;
+    }
+  }
+}
+
+.header-container {
+  @include flex-between;
+  max-width: $container-xl;
+  margin: 0 auto;
+  padding: 0.875rem $spacing-xl;
+  
+  @include respond-to('md') {
+    padding: 0.75rem $spacing-md;
+  }
+}
+
+// Site Branding (Custom Logo wrapper)
+.site-branding {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  
+  // WordPress custom logo link
+  .custom-logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: opacity $transition-fast;
+    
+    &:hover {
+      opacity: 0.85;
+    }
+    
+    &:focus {
+      outline: 2px solid $color-teal;
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+  }
+  
+  // Custom logo image - CONTROLLED SIZE
+  .custom-logo,
+  img {
+    display: block;
+    width: auto;
+    height: 44px;
+    max-height: 44px;
+    object-fit: contain;
+    
+    @include respond-to('md') {
+      height: 36px;
+      max-height: 36px;
+    }
+  }
+}
+
+// Fallback Logo (text)
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  text-decoration: none;
+  color: $color-navy;
+  transition: opacity $transition-fast;
+  
+  &:hover {
+    opacity: 0.8;
+    color: $color-navy;
+  }
+}
+
+.logo-text {
+  font-family: $font-heading;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-medium;
+  color: $color-navy;
+  letter-spacing: 0.02em;
+}
+
+// Navigation
+.main-navigation {
+  display: flex;
+  align-items: center;
+  
+  @include respond-to('md') {
+    display: none;
+    
+    &.is-open {
+      display: flex;
+    }
+  }
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2xl;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-item {
+  margin: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: $spacing-sm 0;
+  font-family: $font-body;
+  font-size: 0.9rem;
+  font-weight: $font-weight-medium;
+  color: $color-gray-dark;
+  text-decoration: none;
+  transition: color $transition-fast;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: $color-teal;
+    transition: width $transition-base;
+  }
+  
+  &:hover {
+    color: $color-teal;
+    
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+.nav-item.active .nav-link,
+.nav-item.current-menu-item .nav-link {
+  color: $color-teal;
+  
+  &::after {
+    width: 100%;
+  }
+}
+
+// Header Accent Bar
+.header-gradient-bar {
+  height: 3px;
+  background: $gradient-copper-gold;
+}
+
+// Mobile Menu Toggle
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: $border-radius-sm;
+  transition: background-color $transition-fast;
+  
+  &:hover {
+    background-color: $color-off-white;
+  }
+  
+  @include respond-to('md') {
+    display: flex;
+  }
+}
+
+.hamburger-line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: $color-gray-dark;
+  transition: all $transition-fast;
+  border-radius: 1px;
+}
+
+// Mobile Navigation
+@include respond-to('md') {
+  .main-navigation {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 320px;
+    height: 100vh;
+    background: $color-white;
+    box-shadow: $shadow-xl;
+    transition: right $transition-base;
+    z-index: 1001;
+    padding: $spacing-3xl $spacing-xl;
+    
+    &.is-open {
+      display: flex;
+      right: 0;
+    }
+  }
+  
+  .nav-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+    width: 100%;
+  }
+  
+  .nav-link {
+    font-size: $font-size-base;
+    padding: $spacing-sm 0;
+  }
+  
+  .mobile-menu-toggle.is-active {
+    .hamburger-line:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger-line:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+  }
+}

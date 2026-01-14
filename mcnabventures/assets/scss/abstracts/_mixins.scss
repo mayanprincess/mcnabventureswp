@@ -1,0 +1,129 @@
+// ==========================================================================
+// MIXINS - McNab Ventures
+// ==========================================================================
+
+@use 'variables' as *;
+
+// Responsive breakpoints (max-width - for desktop-first)
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'sm' {
+    @media (max-width: $breakpoint-sm) { @content; }
+  } @else if $breakpoint == 'md' {
+    @media (max-width: $breakpoint-md) { @content; }
+  } @else if $breakpoint == 'lg' {
+    @media (max-width: $breakpoint-lg) { @content; }
+  } @else if $breakpoint == 'xl' {
+    @media (max-width: $breakpoint-xl) { @content; }
+  }
+}
+
+// Responsive breakpoints (min-width - for mobile-first) ⭐ USE THIS
+@mixin breakpoint-up($breakpoint) {
+  @if $breakpoint == 'sm' {
+    @media (min-width: $breakpoint-sm) { @content; }
+  } @else if $breakpoint == 'md' {
+    @media (min-width: $breakpoint-md) { @content; }
+  } @else if $breakpoint == 'lg' {
+    @media (min-width: $breakpoint-lg) { @content; }
+  } @else if $breakpoint == 'xl' {
+    @media (min-width: $breakpoint-xl) { @content; }
+  }
+}
+
+// Flexbox center
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Flexbox between
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Full width (break out of container)
+@mixin full-width {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+// Truncate text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Button base styles
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-family: $font-body;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  line-height: 1.5;
+  text-decoration: none;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-base;
+}
+
+// Card styles
+@mixin card {
+  background: $color-white;
+  border: 1px solid $color-sand;
+  border-radius: $border-radius-lg;
+  padding: $spacing-xl;
+  transition: all $transition-base;
+  box-shadow: $shadow-sm;
+  
+  &:hover {
+    border-color: $color-teal;
+    box-shadow: 0 8px 24px rgba(47, 191, 179, 0.12);
+    transform: translateY(-4px);
+  }
+}
+
+// Gold gradient text
+@mixin gold-text {
+  background: $gradient-gold;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Snap text styling (Fustat ExtraBold uppercase)
+@mixin snap-text {
+  font-family: $font-body;
+  font-weight: $font-weight-extrabold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+// Heading light (Literata Light)
+@mixin heading-light {
+  font-family: $font-heading;
+  font-weight: $font-weight-light;
+  line-height: $line-height-tight;
+}
+
+// Heading medium (Literata Medium)
+@mixin heading-medium {
+  font-family: $font-heading;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+// Subheading (Fustat Medium)
+@mixin subheading {
+  font-family: $font-body;
+  font-weight: $font-weight-medium;
+  letter-spacing: 0.02em;
+}

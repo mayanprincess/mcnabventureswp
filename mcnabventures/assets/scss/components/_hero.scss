@@ -1,0 +1,327 @@
+// ==========================================================================
+// HERO SECTIONS - McNab Ventures
+// ==========================================================================
+
+@use 'sass:color';
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ==========================================================================
+// GROUPS HERO (Cover Block with class "groups-hero")
+// ==========================================================================
+
+.groups-hero {
+  // Full viewport height with min-height
+  min-height: 700px;
+  max-width: 95vw;
+  margin: 20px auto;
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-4xl $spacing-4xl $spacing-3xl !important;
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  position: relative;
+  justify-content: flex-start;
+  background-size: cover;
+  background-repeat: no-repeat;
+  
+  // Subtle gradient overlay - lighter, more natural
+  .wp-block-cover__background {
+    background: linear-gradient(
+      to right,
+      rgba(14, 85, 115, 0.65) 0%,
+      rgba(14, 85, 115, 0.35) 35%,
+      rgba(0, 0, 0, 0.05) 70%,
+      transparent 100%
+    ) !important;
+  }
+  
+  // Content wrapper
+  .wp-block-cover__inner-container {
+    max-width: 480px;
+    padding: 0;
+    position: relative;
+    z-index: 2;
+  }
+  
+  // Headings - Literata Light (300)
+  h1, h2, h3, h4, h5, h6 {
+    color: $color-white !important;
+    font-family: 'Literata', Georgia, 'Times New Roman', serif !important;
+    font-weight: 300 !important;
+    font-style: normal !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em;
+    margin-bottom: $spacing-lg;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  h1 {
+    font-size: clamp(2.25rem, 5vw, $font-size-5xl); // 54px max
+  }
+  
+  h2 {
+    font-size: clamp(2rem, 4.5vw, $font-size-4xl); // 45px max
+  }
+  
+  // Body text
+  p {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-family: $font-body;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    line-height: $line-height-relaxed;
+    margin-bottom: $spacing-lg;
+  }
+  
+  // Buttons inside hero - Navy pill button with teal arrow
+  .wp-block-button {
+    margin-top: $spacing-sm;
+  }
+  
+  .wp-block-button__link {
+    background: $color-navy !important;
+    color: $color-white !important;
+    font-family: $font-body;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    padding: .5rem 1.25rem .5rem 1.75rem !important;
+    border-radius: $border-radius-full !important;
+    transition: all $transition-base;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    width: 330px;
+    
+    // Teal arrow icon
+    &::after {
+      content: '→';
+      font-size: 1.25rem;
+      font-weight: $font-weight-regular;
+      color: $color-teal;
+      transition: transform $transition-fast;
+    }
+    
+    &:hover {
+      background: color.adjust($color-navy, $lightness: -5%) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(14, 85, 115, 0.4);
+      
+      &::after {
+        transform: translateX(4px);
+      }
+    }
+  }
+  
+  // Scroll indicator at bottom center
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: $spacing-xl;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 36px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.8)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat center center;
+    animation: scrollBounce 2s ease-in-out infinite;
+    cursor: pointer;
+  }
+  
+  // Responsive
+  @include respond-to('md') {
+    min-height: 70vh;
+    padding: $spacing-xl $spacing-md $spacing-3xl !important;
+    border-radius: $border-radius-lg;
+    
+    .wp-block-cover__inner-container {
+      max-width: 100%;
+    }
+    
+    .wp-block-cover__background {
+      background: linear-gradient(
+        to top,
+        rgba(14, 85, 115, 0.75) 0%,
+        rgba(14, 85, 115, 0.4) 50%,
+        transparent 100%
+      ) !important;
+    }
+    
+    h1, h2 {
+      font-size: clamp(1.75rem, 7vw, 2.25rem);
+    }
+  }
+}
+
+// Scroll indicator animation
+@keyframes scrollBounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(-50%) translateY(6px);
+    opacity: 1;
+  }
+}
+
+// ==========================================================================
+// HOMEPAGE HERO (Gradient background)
+// ==========================================================================
+
+.homepageHero {
+  background: $gradient-navy-teal-vertical;
+  padding: $spacing-3xl $spacing-xl;
+  text-align: center;
+  @include full-width;
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: $color-white;
+    margin-bottom: $spacing-sm;
+  }
+  
+  h1 {
+    font-family: $font-heading;
+    font-size: clamp(2.5rem, 6vw, $font-size-5xl);
+    font-weight: $font-weight-light;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    line-height: $line-height-tight;
+  }
+  
+  h2 {
+    font-family: $font-heading;
+    font-size: clamp(2rem, 5vw, $font-size-4xl);
+    font-weight: $font-weight-light;
+    font-style: italic;
+  }
+  
+  p {
+    color: $color-white;
+    font-family: $font-body;
+    font-size: clamp(1rem, 2vw, $font-size-lg);
+    font-weight: $font-weight-medium;
+    opacity: 0.9;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: $spacing-xl;
+    line-height: $line-height-normal;
+  }
+  
+  // Video embed
+  .wp-block-embed,
+  .wp-block-embed-youtube {
+    max-width: 700px;
+    margin: $spacing-xl auto 0;
+  }
+  
+  .wp-block-embed iframe,
+  .wp-block-embed-youtube iframe {
+    border-radius: $border-radius-lg;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    border: none;
+  }
+  
+  .wp-block-embed__wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  }
+}
+
+// ==========================================================================
+// HERO WITH GOLD ACCENTS
+// ==========================================================================
+
+.heroGold {
+  background: $color-navy;
+  padding: $spacing-3xl $spacing-xl;
+  text-align: center;
+  @include full-width;
+  position: relative;
+  overflow: hidden;
+  
+  // Decorative gold accent
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: $gradient-gold;
+  }
+  
+  h1, h2, h3 {
+    color: $color-white;
+    font-family: $font-heading;
+    font-weight: $font-weight-light;
+    font-style: italic;
+  }
+  
+  .gold-accent {
+    @include gold-text;
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: $font-body;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// ==========================================================================
+// FEATURE CARD HERO (for individual property/experience pages)
+// ==========================================================================
+
+.feature-hero {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  
+  .wp-block-cover__background {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(14, 85, 115, 0.7) 100%
+    ) !important;
+  }
+  
+  .wp-block-cover__inner-container {
+    max-width: 800px;
+  }
+  
+  h1, h2 {
+    color: $color-white !important;
+    font-family: $font-heading;
+    font-size: clamp(2.5rem, 6vw, $font-size-5xl);
+    font-weight: $font-weight-light;
+    font-style: italic;
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: $font-size-lg;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}

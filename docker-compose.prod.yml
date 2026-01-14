@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: wp_mysql_prod
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - db_data_prod:/var/lib/mysql
+    networks:
+      - wp_network_prod
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wp_site_prod
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX:-wp_}
+
+      # Prod debug should be OFF (enable only when needed)
+      WP_DEBUG: ${WP_DEBUG:-0}
+      WP_DEBUG_LOG: ${WP_DEBUG_LOG:-0}
+
+      # Salts
+      AUTH_KEY: ${AUTH_KEY}
+      SECURE_AUTH_KEY: ${SECURE_AUTH_KEY}
+      LOGGED_IN_KEY: ${LOGGED_IN_KEY}
+      NONCE_KEY: ${NONCE_KEY}
+      AUTH_SALT: ${AUTH_SALT}
+      SECURE_AUTH_SALT: ${SECURE_AUTH_SALT}
+      LOGGED_IN_SALT: ${LOGGED_IN_SALT}
+      NONCE_SALT: ${NONCE_SALT}
+    volumes:
+      # Persist uploads only; theme/plugins are baked into the image.
+      - wp_uploads_prod:/var/www/html/wp-content/uploads
+    networks:
+      - wp_network_prod
+
+volumes:
+  db_data_prod:
+  wp_uploads_prod:
+
+networks:
+  wp_network_prod:
+    driver: bridge
+

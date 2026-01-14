@@ -1,0 +1,14 @@
+{
+  "name": "mcnabventures/theme",
+  "description": "McNab Ventures WordPress Theme",
+  "type": "wordpress-theme",
+  "require": {
+    "php": ">=7.4",
+    "timber/timber": "^1.23"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
+}

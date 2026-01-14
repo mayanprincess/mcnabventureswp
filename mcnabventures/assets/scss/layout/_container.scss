@@ -1,0 +1,35 @@
+// ==========================================================================
+// CONTAINER & LAYOUT
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+
+.container {
+  width: 100%;
+  max-width: $container-lg;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+.container-wide {
+  max-width: $container-xl;
+}
+
+// WordPress Alignment
+.alignwide {
+  max-width: $container-xl;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alignfull {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+// Main Content
+.site-main {
+  min-height: calc(100vh - 200px);
+}

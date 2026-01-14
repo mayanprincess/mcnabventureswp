@@ -1,0 +1,30 @@
+{# Side Component - Twig Template #}
+<section class="side-component">
+  <div class="wp-block-columns side-component">
+    {# Logo Column #}
+    <div class="wp-block-column side-pill">
+      {% if logo %}
+        <div class="wp-block-image logo-container">
+          <img src="{{ logo }}" alt="{{ badge }}">
+        </div>
+      {% endif %}
+    </div>
+    
+    {# Content Column #}
+    <div class="wp-block-column side-main-content">
+      {% if badge %}
+        <span class="side-minitext">{{ badge }}</span>
+      {% endif %}
+      
+      {% if content %}
+        <div class="side-content">
+          {{ content|raw }}
+        </div>
+      {% endif %}
+      
+      {% if description %}
+        <p class="side-description">{{ description }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>

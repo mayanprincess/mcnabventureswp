@@ -1,0 +1,43 @@
+// ==========================================================================
+// UTILITY CLASSES - TEXT - McNab Ventures
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Text Colors
+.text-white { color: $color-white; }
+.text-black { color: $color-black; }
+.text-navy { color: $color-navy; }
+.text-teal { color: $color-teal; }
+.text-sand { color: $color-sand; }
+.text-copper { color: $color-copper; }
+.text-gold { color: $color-gold; }
+.text-gray-dark { color: $color-gray-dark; }
+.text-gray { color: $color-gray; }
+.text-gray-light { color: $color-gray-light; }
+.text-primary { color: $color-text-primary; }
+.text-secondary { color: $color-text-secondary; }
+.text-muted { color: $color-text-muted; }
+
+// Gold gradient text
+.text-gradient-gold {
+  @include gold-text;
+}
+
+// Text alignment
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+// Text transforms
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+
+// Letter spacing
+.tracking-tight { letter-spacing: -0.02em; }
+.tracking-normal { letter-spacing: 0; }
+.tracking-wide { letter-spacing: 0.02em; }
+.tracking-wider { letter-spacing: 0.05em; }
+.tracking-widest { letter-spacing: 0.1em; }

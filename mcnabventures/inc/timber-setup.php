@@ -1,0 +1,137 @@
+<?php
+/**
+ * Timber Setup
+ * 
+ * Timber is installed via Composer (see composer.json)
+ * This file sets up component helpers and Twig integration
+ */
+
+if (!defined('ABSPATH')) exit;
+
+// Check if Timber is available
+if (!class_exists('Timber\Timber')) {
+  return;
+}
+
+use Timber\Timber;
+
+/**
+ * Configure Timber locations
+ */
+add_filter('timber/locations', function($paths) {
+  // Ensure $paths is an array
+  if (!is_array($paths)) {
+    $paths = [];
+  }
+  
+  // Flatten any nested arrays (in case other filters added arrays)
+  $flat_paths = [];
+  foreach ($paths as $path) {
+    if (is_array($path)) {
+      $flat_paths = array_merge($flat_paths, array_filter($path, 'is_string'));
+    } elseif (is_string($path)) {
+      $flat_paths[] = $path;
+    }
+  }
+  
+  // Add views directory
+  $views_path = get_template_directory() . '/views';
+  if (!in_array($views_path, $flat_paths)) {
+    $flat_paths[] = $views_path;
+  }
+  
+  return $flat_paths;
+});
+
+/**
+ * Render a component using Twig
+ * 
+ * @param string $component_name Component name (file name without .twig)
+ * @param array  $args           Component data (passed directly from Flexible Content)
+ * @return void
+ */
+function mcnab_render_twig_component($component_name, $args = []) {
+  $context = $args;
+  
+  // Handle ACF image arrays - convert to URL strings
+  foreach ($context as $key => $value) {
+    if (is_array($value) && isset($value['url'])) {
+      // ACF image array
+      $context[$key] = $value['url'];
+    } elseif (is_array($value) && isset($value['ID'])) {
+      // ACF image with ID only, get URL
+      $context[$key] = wp_get_attachment_image_url($value['ID'], 'full') ?: '';
+    } elseif (is_numeric($value) && ($key === 'logo' || $key === 'background_image' || strpos($key, 'image') !== false)) {
+      // Image ID as number
+      $context[$key] = wp_get_attachment_image_url($value, 'full') ?: '';
+    }
+  }
+  
+  $template = 'components/' . sanitize_file_name($component_name) . '.twig';
+  
+  try {
+    Timber::render($template, $context);
+  } catch (\Exception $e) {
+    // Log error but don't break the page
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+      error_log('Timber Component Error (' . $component_name . '): ' . $e->getMessage());
+    }
+  }
+}
+
+/**
+ * Get component HTML (for shortcodes, templates, etc.)
+ */
+function mcnab_get_twig_component($component_name, $args = []) {
+  ob_start();
+  mcnab_render_twig_component($component_name, $args);
+  return ob_get_clean();
+}
+
+/**
+ * Register Timber context
+ */
+add_filter('timber/context', function($context) {
+  // Add site-wide data
+  $context['site'] = new Timber\Site();
+  $context['menu'] = new Timber\Menu('header-menu');
+  
+  return $context;
+});
+
+/**
+ * Register Twig functions for components
+ */
+add_filter('timber/twig', function($twig) {
+  // Component render function
+  $twig->addFunction(new \Twig\TwigFunction('component', function($name, $args = []) {
+    return mcnab_get_twig_component($name, $args);
+  }));
+  
+  return $twig;
+});
+
+/**
+ * Register shortcodes using Timber
+ * These allow manual insertion of components via shortcode
+ */
+add_action('init', function() {
+  $components = function_exists('mcnab_get_registered_components') ? mcnab_get_registered_components() : [];
+  
+  foreach ($components as $slug => $component) {
+    // Create shortcode name: side-component -> side_component
+    $shortcode_name = str_replace('-', '_', $slug) . '_component';
+    
+    add_shortcode($shortcode_name, function($atts) use ($slug, $component) {
+      // Get default values from component definition
+      $defaults = [];
+      foreach ($component['fields'] as $field_key => $field_config) {
+        $defaults[$field_key] = $field_config['default'] ?? '';
+      }
+      
+      $atts = shortcode_atts($defaults, $atts);
+      
+      return mcnab_get_twig_component($slug, $atts);
+    });
+  }
+});

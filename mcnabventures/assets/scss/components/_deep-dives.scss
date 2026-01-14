@@ -1,0 +1,95 @@
+// ==========================================================================
+// DEEP-DIVES SECTION - McNab Ventures
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.Deep-Dives {
+  padding: $spacing-3xl $spacing-xl;
+  background-color: $color-white;
+  max-width: $container-xl;
+  margin: $spacing-xl auto;
+  
+  // Section Title
+  > h2,
+  > .wp-block-heading {
+    text-align: center;
+    font-family: $font-heading;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+  
+  // Section Subtitle
+  > p {
+    text-align: center;
+    font-family: $font-body;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-2xl;
+  }
+  
+  // Cards Container
+  .wp-block-columns {
+    gap: $spacing-lg;
+    margin-top: $spacing-xl;
+  }
+  
+  // Individual Card
+  .column-card {
+    @include card;
+    text-align: center;
+    
+    // Card Icon
+    .wp-block-image {
+      margin-bottom: $spacing-md;
+      
+      img {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+        margin: 0 auto;
+      }
+    }
+    
+    // Card Title
+    h3,
+    .wp-block-heading {
+      font-family: $font-heading;
+      font-size: $font-size-xl;
+      font-weight: $font-weight-medium;
+      color: $color-text-primary;
+      margin-bottom: $spacing-sm;
+    }
+    
+    // Card Description
+    > p {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      line-height: $line-height-relaxed;
+      margin-bottom: $spacing-lg;
+    }
+    
+    // Card Button
+    .wp-block-button {
+      margin-top: auto;
+    }
+    
+    .wp-block-button__link {
+      width: 100%;
+      padding: 0.875rem 1.5rem;
+    }
+  }
+  
+  // Responsive
+  @include respond-to('md') {
+    .wp-block-columns {
+      flex-direction: column;
+    }
+    
+    .column-card {
+      margin-bottom: $spacing-md;
+    }
+  }
+}

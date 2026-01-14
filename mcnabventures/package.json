@@ -1,0 +1,13 @@
+{
+  "name": "mcnabventures-theme",
+  "version": "0.1.0",
+  "description": "WordPress theme for McNab Ventures",
+  "scripts": {
+    "sass": "sass --watch assets/scss:assets/css --style compressed",
+    "sass:build": "sass assets/scss:assets/css --style compressed",
+    "dev": "npm run sass"
+  },
+  "devDependencies": {
+    "sass": "^1.69.0"
+  }
+}

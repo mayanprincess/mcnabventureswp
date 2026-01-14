@@ -1,0 +1,219 @@
+// ==========================================================================
+// JOURNEY ACCORDION - McNab Ventures
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.journey-accordion {
+  max-width: $container-lg;
+  margin: $spacing-3xl auto;
+  padding: 0 $spacing-xl;
+  
+  // Main heading
+  > h2,
+  > .wp-block-heading {
+    font-family: $font-heading;
+    font-size: clamp(2rem, 4vw, $font-size-4xl);
+    font-weight: $font-weight-light;
+    color: $color-navy;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  
+  // Gutenberg Details block styling
+  .wp-block-details {
+    border: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    
+    // Summary (clickable header)
+    summary {
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+      padding: $spacing-lg 0;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      transition: all $transition-base;
+      font-weight: $font-weight-bold;
+      color: $color-navy;
+      
+      // Remove default marker
+      &::-webkit-details-marker {
+        display: none;
+      }
+      
+      &::marker {
+        display: none;
+      }
+      
+      // Custom chevron icon
+      &::before {
+        content: '';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: rgba($color-navy, 0.08);
+        flex-shrink: 0;
+        transition: all $transition-base;
+        position: relative;
+        
+        // Chevron icon using CSS
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230E5573' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px;
+      }
+      
+      // Heading inside summary
+      h3,
+      h4,
+      h5,
+      h6,
+      .wp-block-heading {
+        font-family: $font-body;
+        font-size: $font-size-lg;
+        font-weight: $font-weight-bold;
+        color: $color-navy;
+        margin: 0;
+        flex: 1;
+        transition: color $transition-fast;
+      }
+      
+      // Hover state
+      &:hover {
+        h3, h4, h5, h6, .wp-block-heading {
+          color: $color-teal;
+        }
+        
+        &::before {
+          background-color: rgba($color-teal, 0.1);
+          transform: scale(1.05);
+        }
+      }
+    }
+    
+    // Expanded state
+    &[open] {
+      summary {
+        border-bottom-color: rgba($color-navy, 0.15);
+        
+        &::before {
+          background-color: rgba($color-navy, 0.12);
+          transform: rotate(180deg);
+        }
+        
+        h3, h4, h5, h6, .wp-block-heading {
+          font-weight: $font-weight-bold;
+        }
+      }
+      
+      // Content wrapper
+      .wp-block-details p {
+        padding: 0 0 $spacing-lg 0;
+        margin-left: 108px; // Align with text (32px icon + 16px gap)
+        animation: accordionSlideDown 0.3s ease-out;
+      }
+    }
+    
+    // Content (when closed)
+    .wp-block-details__content {
+      padding: 0;
+      margin-left: 48px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out;
+    }
+    
+    // Paragraphs inside content
+    p {
+      font-family: $font-body;
+      font-size: $font-size-base;
+      font-weight: $font-weight-regular;
+      color: $color-navy;
+      line-height: $line-height-relaxed;
+      margin: 0 0 $spacing-md;
+      margin-left: 50px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  
+  // Responsive
+  @include respond-to('md') {
+    padding: 0 $spacing-md;
+    margin: $spacing-2xl auto;
+    
+    .wp-block-details {
+      summary {
+        gap: $spacing-sm;
+        padding: $spacing-md 0;
+        
+        &::before {
+          width: 28px;
+          height: 28px;
+          background-size: 14px;
+        }
+        
+        h3, h4, h5, h6, .wp-block-heading {
+          font-size: $font-size-base;
+        }
+      }
+      
+      &[open] .wp-block-details__content {
+        margin-left: 44px; // Adjusted for smaller icon
+      }
+      
+      .wp-block-details__content {
+        margin-left: 44px;
+      }
+    }
+  }
+}
+
+// Animation for accordion content
+@keyframes accordionSlideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  to {
+    max-height: 1000px; // Large enough for content
+    opacity: 1;
+    padding-top: $spacing-sm;
+    padding-bottom: $spacing-lg;
+  }
+}
+
+// Alternative: Smooth height transition using details[open]
+.wp-block-details[open] .wp-block-details__content {
+  max-height: 2000px;
+  opacity: 1;
+  padding-top: $spacing-sm;
+  padding-bottom: $spacing-lg;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease-out 0.1s,
+              padding 0.3s ease-out;
+}
+
+// Closed state with smooth transition
+.wp-block-details:not([open]) .wp-block-details__content {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease-out,
+              padding 0.3s ease-out;
+}

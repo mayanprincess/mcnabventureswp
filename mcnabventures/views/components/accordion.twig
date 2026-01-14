@@ -1,0 +1,19 @@
+{# Accordion Component - Twig Template #}
+<div class="journey-accordion">
+  {% if title %}
+    <h2>{{ title }}</h2>
+  {% endif %}
+  
+  {% if items %}
+    {% for item in items %}
+      <details class="wp-block-details">
+        <summary>
+          <h3>{{ item.title }}</h3>
+        </summary>
+        <div class="wp-block-details__content">
+          <p>{{ item.content }}</p>
+        </div>
+      </details>
+    {% endfor %}
+  {% endif %}
+</div>

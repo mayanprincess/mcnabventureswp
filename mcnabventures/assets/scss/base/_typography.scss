@@ -1,0 +1,195 @@
+// ==========================================================================
+// TYPOGRAPHY - McNab Ventures Design System
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+
+// ==========================================================================
+// BASE TYPOGRAPHY
+// ==========================================================================
+
+html {
+  font-size: 18px; // Base size for rem calculations
+}
+
+body {
+  font-family: $font-body;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ==========================================================================
+// HEADINGS - Literata Light
+// ==========================================================================
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 $spacing-md;
+  font-family: $font-heading;
+  font-weight: $font-weight-light;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+}
+
+h1 {
+  font-size: $font-size-5xl;
+  line-height: $line-height-tight;
+}
+
+h2 {
+  font-size: $font-size-4xl;
+  line-height: $line-height-tight;
+}
+
+h3 {
+  font-size: $font-size-3xl;
+  line-height: $line-height-snug;
+}
+
+h4 {
+  font-size: $font-size-2xl;
+  line-height: $line-height-snug;
+}
+
+h5 {
+  font-size: $font-size-xl;
+  line-height: $line-height-snug;
+}
+
+h6 {
+  font-size: $font-size-lg;
+  line-height: $line-height-snug;
+}
+
+// ==========================================================================
+// HEADING MODIFIERS
+// ==========================================================================
+
+// Literata Medium for emphasis headings
+.heading--medium {
+  font-weight: $font-weight-medium;
+}
+
+// Subheadings use Fustat Medium
+.subheading {
+  font-family: $font-body;
+  font-weight: $font-weight-medium;
+  letter-spacing: 0.02em;
+}
+
+// ==========================================================================
+// BODY TEXT
+// ==========================================================================
+
+p {
+  margin: 0 0 $spacing-md;
+}
+
+// Large body text
+.text-lg {
+  font-size: $font-size-lg;
+}
+
+// Small body text
+.text-sm {
+  font-size: $font-size-sm;
+}
+
+// Extra small text
+.text-xs {
+  font-size: $font-size-xs;
+}
+
+// ==========================================================================
+// SNAPS / ACCENT TEXT - Fustat ExtraBold
+// ==========================================================================
+
+.snap,
+.text-snap {
+  font-family: $font-body;
+  font-weight: $font-weight-extrabold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+// ==========================================================================
+// LINKS
+// ==========================================================================
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: $color-secondary;
+  }
+  
+  &:focus {
+    outline: 2px solid $color-secondary;
+    outline-offset: 2px;
+  }
+}
+
+// ==========================================================================
+// FONT WEIGHT UTILITIES
+// ==========================================================================
+
+.font-light {
+  font-weight: $font-weight-light;
+}
+
+.font-regular {
+  font-weight: $font-weight-regular;
+}
+
+.font-medium {
+  font-weight: $font-weight-medium;
+}
+
+.font-bold {
+  font-weight: $font-weight-bold;
+}
+
+.font-extrabold {
+  font-weight: $font-weight-extrabold;
+}
+
+// ==========================================================================
+// FONT FAMILY UTILITIES
+// ==========================================================================
+
+.font-heading {
+  font-family: $font-heading;
+}
+
+.font-body {
+  font-family: $font-body;
+}
+
+// ==========================================================================
+// LINE HEIGHT UTILITIES
+// ==========================================================================
+
+.leading-tight {
+  line-height: $line-height-tight;
+}
+
+.leading-snug {
+  line-height: $line-height-snug;
+}
+
+.leading-normal {
+  line-height: $line-height-normal;
+}
+
+.leading-relaxed {
+  line-height: $line-height-relaxed;
+}
+
+.leading-loose {
+  line-height: $line-height-loose;
+}

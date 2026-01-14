@@ -1,0 +1,47 @@
+# =========================================================
+# Root .gitignore (dev + prod)
+# Keeps local docker/dev artifacts out of the repo.
+# Theme-specific ignore rules live in `mcnabventures/.gitignore`.
+# =========================================================
+
+# --- OS / IDE ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs ---
+*.log
+debug.log
+debug.log/**
+
+# --- Env files (avoid committing secrets) ---
+prod.env
+*.env
+*.env.*
+
+# --- WordPress config (local) ---
+wp-config.php
+
+# --- Docker / local volumes ---
+wp_data/
+db_data/
+
+# --- Dependencies / build artifacts (root-level) ---
+node_modules/
+vendor/
+
+# --- Theme dependencies / build artifacts ---
+mcnabventures/node_modules/
+mcnabventures/vendor/
+
+# --- Sass cache ---
+.sass-cache/
+mcnabventures/.sass-cache/
+
+# --- Plugins (ACF PRO & other plugins should not be committed by default) ---
+plugins/**
+!plugins/.gitkeep
+

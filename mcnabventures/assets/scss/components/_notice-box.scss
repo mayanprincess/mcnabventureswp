@@ -1,0 +1,91 @@
+// ==========================================================================
+// NOTICE / DISCLAIMER BOX - McNab Ventures
+// ==========================================================================
+
+@use 'sass:color';
+@use '../abstracts/variables' as *;
+
+.notice-box {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  background-color: rgba($color-teal, 0.08);
+  border: 1px solid rgba($color-teal, 0.3);
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg $spacing-xl;
+  max-width: $container-lg;
+  margin: $spacing-3xl auto;
+  
+  &::before {
+    content: "ⓘ";
+    font-size: 1.25rem;
+    color: $color-teal;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  h4, h5, h6,
+  .wp-block-heading {
+    font-family: $font-body;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    color: $color-teal;
+    margin: 0 0 $spacing-xs;
+  }
+  
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: $line-height-relaxed;
+    margin: 0;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  // Warning variant (using copper)
+  &.notice-warning {
+    background-color: rgba($color-copper, 0.1);
+    border-color: rgba($color-copper, 0.4);
+    
+    &::before {
+      content: "⚠";
+      color: $color-copper;
+    }
+    
+    h4, h5, .wp-block-heading {
+      color: color.adjust($color-copper, $lightness: -10%);
+    }
+  }
+  
+  // Important variant (using gold)
+  &.notice-important {
+    background-color: rgba($color-gold, 0.1);
+    border-color: rgba($color-gold, 0.4);
+    
+    &::before {
+      content: "★";
+      color: $color-gold;
+    }
+    
+    h4, h5, .wp-block-heading {
+      color: color.adjust($color-gold, $lightness: -10%);
+    }
+  }
+  
+  // Navy variant
+  &.notice-navy {
+    background-color: rgba($color-navy, 0.08);
+    border-color: rgba($color-navy, 0.3);
+    
+    &::before {
+      content: "ⓘ";
+      color: $color-navy;
+    }
+    
+    h4, h5, .wp-block-heading {
+      color: $color-navy;
+    }
+  }
+}

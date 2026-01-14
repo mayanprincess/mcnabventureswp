@@ -1,0 +1,219 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "980px",
+      "wideSize": "1200px"
+    },
+    "background": {
+      "backgroundImage": true,
+      "backgroundSize": true
+    },
+    "color": {
+      "background": true,
+      "custom": true,
+      "customDuotone": true,
+      "customGradient": true,
+      "defaultGradients": false,
+      "defaultPalette": false,
+      "palette": [
+        { "slug": "white", "color": "#FFFFFF", "name": "White" },
+        { "slug": "navy", "color": "#0E5573", "name": "Navy Blue" },
+        { "slug": "teal", "color": "#2FBFB3", "name": "Teal" },
+        { "slug": "sand", "color": "#C9C5B8", "name": "Sand" },
+        { "slug": "copper", "color": "#C49A6D", "name": "Copper" },
+        { "slug": "gold", "color": "#C9A441", "name": "Gold" },
+        { "slug": "black", "color": "#000000", "name": "Black" },
+        { "slug": "gray-dark", "color": "#3A3A3A", "name": "Dark Gray" },
+        { "slug": "gray", "color": "#6B6B6B", "name": "Gray" },
+        { "slug": "gray-light", "color": "#9C9EA1", "name": "Light Gray" },
+        { "slug": "off-white", "color": "#F5F5F3", "name": "Off White" }
+      ],
+      "gradients": [
+        {
+          "slug": "gold-shimmer",
+          "gradient": "linear-gradient(135deg, #D4B44A 0%, #C9A441 25%, #E6C866 50%, #C9A441 75%, #B8933A 100%)",
+          "name": "Gold Shimmer"
+        },
+        {
+          "slug": "gold-vertical",
+          "gradient": "linear-gradient(180deg, #E6C866 0%, #C9A441 50%, #B8933A 100%)",
+          "name": "Gold (Vertical)"
+        },
+        {
+          "slug": "navy-teal",
+          "gradient": "linear-gradient(135deg, #0E5573 0%, #2FBFB3 100%)",
+          "name": "Navy → Teal (Diagonal)"
+        },
+        {
+          "slug": "navy-teal-vertical",
+          "gradient": "linear-gradient(180deg, #0E5573 0%, #2FBFB3 100%)",
+          "name": "Navy → Teal (Vertical)"
+        },
+        {
+          "slug": "copper-gold",
+          "gradient": "linear-gradient(135deg, #C49A6D 0%, #C9A441 100%)",
+          "name": "Copper → Gold (Diagonal)"
+        },
+        {
+          "slug": "copper-gold-vertical",
+          "gradient": "linear-gradient(180deg, #C49A6D 0%, #C9A441 100%)",
+          "name": "Copper → Gold (Vertical)"
+        },
+        {
+          "slug": "sand-white",
+          "gradient": "linear-gradient(180deg, #C9C5B8 0%, #FFFFFF 100%)",
+          "name": "Sand → White"
+        },
+        {
+          "slug": "warm-palette",
+          "gradient": "linear-gradient(90deg, #C9C5B8 0%, #C49A6D 50%, #C9A441 100%)",
+          "name": "Warm Palette"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "fontFamily": "'Literata', Georgia, 'Times New Roman', serif",
+          "slug": "literata",
+          "name": "Literata"
+        },
+        {
+          "fontFamily": "'Fustat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          "slug": "fustat",
+          "name": "Fustat"
+        }
+      ],
+      "fontSizes": [
+        { "slug": "xs", "size": "0.667rem", "name": "Extra Small (12px)" },
+        { "slug": "sm", "size": "0.833rem", "name": "Small (15px)" },
+        { "slug": "base", "size": "1rem", "name": "Base (18px)" },
+        { "slug": "lg", "size": "1.222rem", "name": "Large (22px)" },
+        { "slug": "xl", "size": "1.444rem", "name": "Extra Large (26px)" },
+        { "slug": "2xl", "size": "1.722rem", "name": "2X Large (31px)" },
+        { "slug": "3xl", "size": "2.056rem", "name": "3X Large (37px)" },
+        { "slug": "4xl", "size": "2.5rem", "name": "4X Large (45px)" },
+        { "slug": "5xl", "size": "3rem", "name": "5X Large (54px)" }
+      ]
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true,
+      "blockGap": true,
+      "units": ["px", "em", "rem", "%", "vw", "vh"]
+    },
+    "border": {
+      "color": true,
+      "radius": true,
+      "style": true,
+      "width": true
+    },
+    "blocks": {
+      "core/group": {
+        "background": {
+          "backgroundImage": true,
+          "backgroundSize": true
+        }
+      },
+      "core/cover": {
+        "color": {
+          "palette": [
+            { "slug": "white", "color": "#FFFFFF", "name": "White" },
+            { "slug": "navy", "color": "#0E5573", "name": "Navy Blue" },
+            { "slug": "teal", "color": "#2FBFB3", "name": "Teal" }
+          ]
+        }
+      },
+      "core/column": {
+        "border": {
+          "color": true,
+          "radius": true,
+          "style": true,
+          "width": true
+        }
+      }
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#FFFFFF",
+      "text": "#3A3A3A"
+    },
+    "typography": {
+      "fontFamily": "'Fustat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "fontSize": "1rem",
+      "lineHeight": "1.5"
+    },
+    "elements": {
+      "link": {
+        "color": {
+          "text": "#0E5573"
+        },
+        ":hover": {
+          "color": {
+            "text": "#2FBFB3"
+          }
+        }
+      },
+      "heading": {
+        "typography": {
+          "fontFamily": "'Literata', Georgia, 'Times New Roman', serif",
+          "fontWeight": "300"
+        },
+        "color": {
+          "text": "#3A3A3A"
+        }
+      },
+      "h1": {
+        "typography": {
+          "fontSize": "3rem",
+          "lineHeight": "1.2"
+        }
+      },
+      "h2": {
+        "typography": {
+          "fontSize": "2.5rem",
+          "lineHeight": "1.2"
+        }
+      },
+      "h3": {
+        "typography": {
+          "fontSize": "2.056rem",
+          "lineHeight": "1.3"
+        }
+      },
+      "h4": {
+        "typography": {
+          "fontSize": "1.722rem",
+          "lineHeight": "1.3"
+        }
+      },
+      "h5": {
+        "typography": {
+          "fontSize": "1.444rem",
+          "lineHeight": "1.3"
+        }
+      },
+      "h6": {
+        "typography": {
+          "fontSize": "1.222rem",
+          "lineHeight": "1.3"
+        }
+      },
+      "button": {
+        "color": {
+          "background": "#0E5573",
+          "text": "#FFFFFF"
+        },
+        ":hover": {
+          "color": {
+            "background": "#2FBFB3"
+          }
+        }
+      }
+    }
+  }
+}

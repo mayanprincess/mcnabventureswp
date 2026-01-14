@@ -1,0 +1,305 @@
+// ==========================================================================
+// SIDE COMPONENT - McNab Ventures
+// ==========================================================================
+// Mobile-first approach
+// Two-column layout: Logo in pill shape (left) + Content (right)
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ==========================================================================
+// MOBILE FIRST - Base Styles (Phone)
+// ==========================================================================
+
+section.side-component {
+  width: 100%;
+  margin: 0;
+  padding: $spacing-xl $spacing-md;
+  background-color: $color-white;
+  overflow: hidden;
+}
+
+.side-component.wp-block-columns {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xl; 
+}
+
+// ==========================================================================
+// SIDE PILL - Logo Container (Mobile)
+// ==========================================================================
+
+.side-pill {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  
+  &.wp-block-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-basis: auto !important;
+  }
+  
+  // Pill-shaped background - Mobile: rounded rectangle
+  &::before {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    left: 1rem;
+    right: 1rem;
+    bottom: 2rem;
+    background-color: #F5F3EE;
+    border-radius: 4rem;
+    z-index: 0;
+    
+    // Tablet (768px+)
+    @include breakpoint-up('lg') {
+      top: 4rem;
+      left: -100vw;
+      right: 0;
+      bottom: 4rem;
+      border-radius: 0 7rem 7rem 0;
+    }
+  }
+  
+  // Logo container
+  .wp-block-image,
+  .logo-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: $spacing-2xl $spacing-xl;
+    min-height: 180px;
+    
+    img {
+      width: 140px;
+      height: auto;
+      object-fit: contain;
+    }
+  }
+}
+
+// ==========================================================================
+// SIDE MAIN CONTENT - Text (Mobile)
+// ==========================================================================
+
+.side-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 $spacing-sm;
+  width: 100%;
+  
+  &.wp-block-column {
+    flex-basis: auto !important;
+  }
+}
+
+// ==========================================================================
+// SIDE MINITEXT - Badge/Label (Mobile)
+// ==========================================================================
+
+.side-minitext {
+  display: inline-block;
+  border: 1px solid rgba($color-navy, 0.3);
+  border-radius: $border-radius-full;
+  padding: 0.5rem 1.25rem;
+  font-family: $font-body;
+  font-size: 0.625rem;
+  font-weight: $font-weight-medium;
+  color: $color-navy;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: $spacing-lg;
+  width: fit-content;
+}
+
+// ==========================================================================
+// SIDE CONTENT - WYSIWYG Content Area (Mobile)
+// ==========================================================================
+
+.side-content {
+  margin-bottom: $spacing-lg;
+  
+  h1, h2, h3, h4, h5, h6,
+  p {
+    font-family: $font-heading;
+    font-size: 1.25rem;
+    font-weight: $font-weight-light;
+    font-style: italic;
+    line-height: 1.45;
+    color: $color-navy;
+    margin: 0;
+    text-align: center;
+  }
+  
+  // Bold text = Teal color
+  strong,
+  b {
+    color: $color-teal;
+    font-weight: $font-weight-light;
+    font-style: italic;
+  }
+  
+  a {
+    color: $color-teal;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ==========================================================================
+// SIDE DESCRIPTION - Additional Text (Mobile)
+// ==========================================================================
+
+.side-description {
+  font-family: $font-heading;
+  font-size: 0.9375rem;
+  font-weight: $font-weight-light;
+  font-style: italic;
+  color: rgba($color-navy, 0.7);
+  line-height: 1.55;
+  text-align: center;
+  margin: 0;
+  max-width: 100%;
+}
+
+// ==========================================================================
+// TABLET - 640px+
+// ==========================================================================
+
+@media (min-width: 640px) {
+  section.side-component {
+    padding: $spacing-2xl $spacing-lg;
+  }
+  
+  .side-component.wp-block-columns {
+    gap: $spacing-2xl;
+  }
+  
+  .side-main-content {
+    padding: 0 $spacing-md;
+  }
+  
+  .side-minitext {
+    font-size: 0.6875rem;
+    padding: 0.5rem 1.5rem;
+  }
+  
+  .side-content {
+    h1, h2, h3, h4, h5, h6, p {
+      font-size: 1.375rem;
+    }
+  }
+  
+  .side-description {
+    font-size: 1rem;
+    max-width: 480px;
+  }
+}
+
+// ==========================================================================
+// DESKTOP - 1024px+ (Horizontal Layout)
+// ==========================================================================
+
+@media (min-width: 1024px) {
+  section.side-component {
+    padding: $spacing-3xl 0;
+    overflow: visible;
+  }
+  
+  .side-component.wp-block-columns {
+    flex-direction: row;
+    align-items: center;
+    max-width: 1400px;
+    padding: 0 $spacing-2xl;
+    gap: $spacing-3xl;
+  }
+  
+  .side-main-content {
+    align-items: flex-end;
+    text-align: right;
+    padding: $spacing-xl 0;
+    padding-right: $spacing-lg;
+  }
+  
+  .side-minitext {
+    margin-left: auto;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .side-content {
+    margin-bottom: $spacing-lg;
+    
+    h1, h2, h3, h4, h5, h6, p {
+      font-size: 1.5rem;
+      text-align: right;
+      line-height: 1.5;
+    }
+  }
+  
+  .side-description {
+    text-align: right;
+    margin-left: auto;
+    font-size: 1.125rem;
+    max-width: 450px;
+  }
+}
+
+// ==========================================================================
+// LARGE DESKTOP - 1200px+
+// ==========================================================================
+
+@media (min-width: 1200px) {
+  section.side-component {
+    padding: $spacing-4xl 0;
+  }
+  
+  .side-component.wp-block-columns {
+    padding: 0 $spacing-3xl;
+    gap: $spacing-4xl;
+  }
+    
+  .side-main-content {
+    padding-right: $spacing-xl;
+  }
+  
+  .side-content {
+    h1, h2, h3, h4, h5, h6, p {
+      font-size: 1.75rem;
+    }
+  }
+  
+  .side-description {
+    font-size: 1.25rem;
+    max-width: 500px;
+  }
+}
+
+// ==========================================================================
+// EXTRA LARGE - 1440px+
+// ==========================================================================
+
+@media (min-width: 1440px) {  
+  .side-content {
+    h1, h2, h3, h4, h5, h6, p {
+      font-size: 1.875rem;
+    }
+  }
+}

@@ -1,0 +1,52 @@
+// ==========================================================================
+// UTILITY CLASSES - BACKGROUNDS - McNab Ventures
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+
+// Solid Colors
+.bg-white { background-color: $color-white; }
+.bg-off-white { background-color: $color-off-white; }
+.bg-navy { background-color: $color-navy; }
+.bg-teal { background-color: $color-teal; }
+.bg-sand { background-color: $color-sand; }
+.bg-copper { background-color: $color-copper; }
+.bg-gold { background-color: $color-gold; }
+.bg-black { background-color: $color-black; }
+.bg-gray-dark { background-color: $color-gray-dark; }
+.bg-gray { background-color: $color-gray; }
+.bg-gray-light { background-color: $color-gray-light; }
+
+// Gradients
+.bg-gradient-gold { background: $gradient-gold; }
+.bg-gradient-gold-vertical { background: $gradient-gold-vertical; }
+.bg-gradient-navy-teal { background: $gradient-navy-teal; }
+.bg-gradient-navy-teal-vertical { background: $gradient-navy-teal-vertical; }
+.bg-gradient-copper-gold { background: $gradient-copper-gold; }
+.bg-gradient-copper-gold-vertical { background: $gradient-copper-gold-vertical; }
+.bg-gradient-sand-white { background: $gradient-sand-white; }
+
+// Background utilities with text color override
+.bg-navy,
+.bg-gold,
+.bg-copper,
+.bg-black,
+.bg-gray-dark,
+.bg-gradient-navy-teal,
+.bg-gradient-navy-teal-vertical,
+.bg-gradient-gold,
+.bg-gradient-copper-gold {
+  color: $color-white;
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: $color-white;
+  }
+  
+  a {
+    color: $color-sand;
+    
+    &:hover {
+      color: $color-white;
+    }
+  }
+}

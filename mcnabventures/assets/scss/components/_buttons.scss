@@ -1,0 +1,100 @@
+// ==========================================================================
+// BUTTONS - McNab Ventures
+// ==========================================================================
+
+@use 'sass:color';
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.btn,
+.wp-block-button__link,
+.wp-element-button {
+  @include button-base;
+  width: 100%;
+  max-width: 100%;
+}
+
+// Default button style - Navy
+.wp-block-button__link,
+.wp-element-button {
+  color: $color-white !important;
+  background: $color-navy !important;
+  
+  &:hover {
+    background: color.adjust($color-navy, $lightness: -5%) !important;
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+    color: $color-white !important;
+  }
+}
+
+.btn-primary {
+  color: $color-white;
+  background: $color-navy;
+  
+  &:hover {
+    background: color.adjust($color-navy, $lightness: -5%);
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.btn-secondary {
+  color: $color-white;
+  background: $color-teal;
+  
+  &:hover {
+    background: color.adjust($color-teal, $lightness: -5%);
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.btn-gold {
+  color: $color-white;
+  background: $gradient-gold;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-gold;
+  }
+}
+
+.btn-copper {
+  color: $color-white;
+  background: $color-copper;
+  
+  &:hover {
+    background: color.adjust($color-copper, $lightness: -5%);
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.btn-outline {
+  color: $color-primary;
+  background: transparent;
+  border: 2px solid $color-primary;
+  
+  &:hover {
+    color: $color-white;
+    background: $color-primary;
+  }
+}
+
+.btn-outline-gold {
+  color: $color-gold;
+  background: transparent;
+  border: 2px solid $color-gold;
+  
+  &:hover {
+    color: $color-white;
+    background: $color-gold;
+  }
+}
+
+// Button containers
+.wp-block-button,
+.wp-block-buttons {
+  width: 100%;
+}

@@ -1,0 +1,1 @@
+<?php /* Template Name: Landing Page */ get_header(); the_content(); get_footer(); ?>
