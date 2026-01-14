@@ -24,7 +24,9 @@ RUN npm run sass:build
 FROM composer:2 AS composer_deps
 WORKDIR /app
 
-COPY mcnabventures/composer.json mcnabventures/composer.lock ./
+# If `composer.lock` is not present in the repo, this stage should still build.
+# Best practice: commit `composer.lock` for deterministic builds.
+COPY mcnabventures/composer.json ./
 RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
 ############################

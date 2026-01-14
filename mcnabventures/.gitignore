@@ -1,10 +1,10 @@
 # Composer
 /vendor/
-composer.lock
+# NOTE: Keep `composer.lock` committed for reproducible builds (especially for Docker/prod)
 
 # Node
 node_modules/
-package-lock.json
+# NOTE: Keep `package-lock.json` committed for reproducible builds (especially for Docker/prod)
 
 # Compiled CSS
 /assets/css/*.css
