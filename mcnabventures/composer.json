@@ -3,12 +3,16 @@
   "description": "McNab Ventures WordPress Theme",
   "type": "wordpress-theme",
   "require": {
-    "php": ">=7.4",
-    "timber/timber": "^1.23"
+    "php": ">=8.0",
+    "timber/timber": "^2.0"
   },
   "config": {
     "allow-plugins": {
       "composer/installers": true
+    },
+    "audit": {
+      "block-insecure": false
     }
-  }
+  },
+  "prefer-stable": true
 }
