@@ -53,7 +53,6 @@ RUN chmod +x /usr/local/bin/railway-start.sh
 COPY wp-config.prod.php /usr/src/wordpress/wp-config.php
 COPY --from=assets /app/mcnabventures /usr/src/wordpress/wp-content/themes/mcnabventures
 COPY --from=composer_deps /app/vendor /usr/src/wordpress/wp-content/themes/mcnabventures/vendor
-COPY plugins /usr/src/wordpress/wp-content/plugins
 
 # Railway exposes $PORT; default to 8080 if not set
 ENV PORT=8080

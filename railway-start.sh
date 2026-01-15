@@ -29,6 +29,17 @@ EOF
 # `php-fpm -D` daemonizes and returns, leaving php-fpm running.
 ( /usr/local/bin/docker-entrypoint.sh php-fpm -D )
 
+# If wp-content is persisted as a volume in Railway, we still want the theme from the image
+# to be updated on every deploy. We sync the theme into the volume on boot.
+export SYNC_THEME_ON_BOOT="${SYNC_THEME_ON_BOOT:-1}"
+if [ "${SYNC_THEME_ON_BOOT}" = "1" ]; then
+  if [ -d "/usr/src/wordpress/wp-content/themes/mcnabventures" ]; then
+    mkdir -p /var/www/html/wp-content/themes
+    rm -rf /var/www/html/wp-content/themes/mcnabventures
+    cp -a /usr/src/wordpress/wp-content/themes/mcnabventures /var/www/html/wp-content/themes/mcnabventures
+  fi
+fi
+
 # Render nginx config with Railway PORT
 envsubst '${PORT} ${CLIENT_MAX_BODY_SIZE}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
