@@ -33,6 +33,11 @@ RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --opt
 ############################
 FROM wordpress:6.4.3-php8.2-apache
 
+# Fix: "More than one MPM loaded" (ensure only one Apache MPM is enabled)
+# WordPress Apache images should use prefork; disable event/worker if present.
+RUN a2dismod mpm_event mpm_worker >/dev/null 2>&1 || true \
+  && a2enmod mpm_prefork >/dev/null 2>&1 || true
+
 # Prod wp-config uses environment variables for secrets.
 COPY wp-config.prod.php /var/www/html/wp-config.php
 
