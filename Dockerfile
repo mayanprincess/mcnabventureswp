@@ -31,23 +31,22 @@ RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --opt
 ############################
 # 3) Runtime (WordPress)
 ############################
-FROM wordpress:6.4.3-php8.2-apache
+FROM wordpress:6.4.3-php8.2-fpm
 
-# Fix: "More than one MPM loaded" (ensure only one Apache MPM is enabled)
-# WordPress Apache images should use prefork; disable event/worker if present.
-RUN a2dismod mpm_event mpm_worker >/dev/null 2>&1 || true \
-  && a2enmod mpm_prefork >/dev/null 2>&1 || true
+# NOTE:
+# For the FPM image, Nginx will serve static files and forward PHP to php-fpm.
+# We copy theme/plugins into /usr/src/wordpress so the official entrypoint copies
+# them into /var/www/html (the shared volume) on first run.
 
 # Prod wp-config uses environment variables for secrets.
-COPY wp-config.prod.php /var/www/html/wp-config.php
+COPY wp-config.prod.php /usr/src/wordpress/wp-config.php
 
 # Theme (with compiled CSS)
-COPY --from=assets /app/mcnabventures /var/www/html/wp-content/themes/mcnabventures
+COPY --from=assets /app/mcnabventures /usr/src/wordpress/wp-content/themes/mcnabventures
 # Composer vendor into theme
-COPY --from=composer_deps /app/vendor /var/www/html/wp-content/themes/mcnabventures/vendor
+COPY --from=composer_deps /app/vendor /usr/src/wordpress/wp-content/themes/mcnabventures/vendor
 
 # Plugins (drop ACF PRO, etc. into ./plugins locally before building)
-COPY plugins /var/www/html/wp-content/plugins
+COPY plugins /usr/src/wordpress/wp-content/plugins
 
-RUN chown -R www-data:www-data /var/www/html/wp-content
 

@@ -23,8 +23,6 @@ services:
     restart: unless-stopped
     depends_on:
       - db
-    ports:
-      - "${WP_PORT:-8080}:80"
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
@@ -46,14 +44,28 @@ services:
       LOGGED_IN_SALT: ${LOGGED_IN_SALT}
       NONCE_SALT: ${NONCE_SALT}
     volumes:
-      # Persist uploads only; theme/plugins are baked into the image.
-      - wp_uploads_prod:/var/www/html/wp-content/uploads
+      # Share WP files with Nginx (WP core + themes + plugins + uploads)
+      - wp_html_prod:/var/www/html
+    networks:
+      - wp_network_prod
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: wp_nginx_prod
+    restart: unless-stopped
+    depends_on:
+      - wordpress
+    ports:
+      - "${WP_PORT:-8080}:80"
+    volumes:
+      - wp_html_prod:/var/www/html:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - wp_network_prod
 
 volumes:
   db_data_prod:
-  wp_uploads_prod:
+  wp_html_prod:
 
 networks:
   wp_network_prod:

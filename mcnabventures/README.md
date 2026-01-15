@@ -57,6 +57,15 @@ Para producción, usamos **archivos separados** que NO afectan tu flujo local:
 - `wp-config.prod.php`: config de WP para prod usando variables de entorno.
 - `prod.env.example`: ejemplo de variables (salts, DB, etc).
 
+### Opción A (recomendada): WordPress PHP-FPM + Nginx
+
+El `docker-compose.prod.yml` usa:
+
+- `wordpress` (PHP-FPM) en el puerto **9000** interno
+- `nginx` como web server público en el puerto **80**
+
+Nginx sirve estáticos y envía `.php` a FPM.
+
 ### Build + Run (prod)
 
 1. Crea tu archivo de variables (no se commitea normalmente):
@@ -76,9 +85,10 @@ docker compose -f docker-compose.prod.yml --env-file prod.env build
 docker compose -f docker-compose.prod.yml --env-file prod.env up -d
 ```
 
-### Nota de uploads
+### Nota de volumen
 
-En producción solo se persisten `uploads/` vía volumen (ver `docker-compose.prod.yml`).
+En producción se persiste `/var/www/html` en un volumen compartido entre `wordpress` y `nginx` (ver `docker-compose.prod.yml`).
+Esto permite que Nginx sirva estáticos (theme assets, uploads, etc).
 
 ---
 

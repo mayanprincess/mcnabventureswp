@@ -1,0 +1,63 @@
+############################################
+# Railway: Single service container
+# - Nginx (public HTTP) + PHP-FPM (WordPress)
+# - Builds SCSS + Composer deps in build stages
+# - Copies theme + plugins into /usr/src/wordpress so the official entrypoint
+#   populates /var/www/html on first boot
+############################################
+
+# syntax=docker/dockerfile:1
+
+############################
+# 1) Build assets (Sass)
+############################
+FROM node:20-alpine AS assets
+WORKDIR /app
+
+COPY mcnabventures/package.json mcnabventures/package-lock.json ./
+RUN npm ci
+
+COPY mcnabventures ./mcnabventures
+WORKDIR /app/mcnabventures
+RUN npm run sass:build
+
+############################
+# 2) Build PHP deps (Composer)
+############################
+FROM composer:2.7 AS composer_deps
+WORKDIR /app
+
+COPY mcnabventures/composer.json mcnabventures/composer.lock ./
+RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader --no-security-blocking
+
+############################
+# 3) Runtime (WordPress PHP-FPM + Nginx)
+############################
+FROM wordpress:6.4.3-php8.2-fpm
+
+# Install nginx
+RUN set -eux; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends nginx ca-certificates gettext-base; \
+  rm -rf /var/lib/apt/lists/*; \
+  rm -f /etc/nginx/sites-enabled/default || true
+
+# Nginx config template (PORT injected at runtime via envsubst)
+COPY nginx/railway.conf.template /etc/nginx/conf.d/default.conf.template
+
+# Start script
+COPY railway-start.sh /usr/local/bin/railway-start.sh
+RUN chmod +x /usr/local/bin/railway-start.sh
+
+# WordPress config + theme + plugins (copied into wp source dir)
+COPY wp-config.prod.php /usr/src/wordpress/wp-config.php
+COPY --from=assets /app/mcnabventures /usr/src/wordpress/wp-content/themes/mcnabventures
+COPY --from=composer_deps /app/vendor /usr/src/wordpress/wp-content/themes/mcnabventures/vendor
+COPY plugins /usr/src/wordpress/wp-content/plugins
+
+# Railway exposes $PORT; default to 8080 if not set
+ENV PORT=8080
+
+# Keep official entrypoint (copies /usr/src/wordpress -> /var/www/html when needed)
+CMD ["bash", "/usr/local/bin/railway-start.sh"]
+
