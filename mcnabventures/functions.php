@@ -9,7 +9,10 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
   
   // Initialize Timber
   if (class_exists('Timber\Timber')) {
-    $timber = new Timber\Timber();
+    // Timber v2: constructor is protected; use init().
+    if (is_callable(['Timber\\Timber', 'init'])) {
+      Timber\Timber::init();
+    }
   }
 }
 
