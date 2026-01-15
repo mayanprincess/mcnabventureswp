@@ -87,9 +87,9 @@ if (!$has_any_db_env || !$db_host || !$db_name || !$db_user) {
   echo "- DB_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD\n";
   echo "- MYSQLHOST, MYSQLPORT, MYSQLDATABASE, MYSQLUSER, MYSQLPASSWORD\n\n";
   echo "Resolved values:\n";
-  echo "DB_HOST=" . ($db_host ?: '(empty)') . \"\\n\";
-  echo "DB_NAME=" . ($db_name ?: '(empty)') . \"\\n\";
-  echo "DB_USER=" . ($db_user ?: '(empty)') . \"\\n\";
+  echo "DB_HOST=" . ($db_host ?: '(empty)') . "\n";
+  echo "DB_NAME=" . ($db_name ?: '(empty)') . "\n";
+  echo "DB_USER=" . ($db_user ?: '(empty)') . "\n";
   exit(1);
 }
 
