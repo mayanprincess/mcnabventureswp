@@ -5,10 +5,29 @@
  * Uses environment variables for DB + salts.
  */
 
-define('DB_NAME', getenv('WORDPRESS_DB_NAME') ?: 'wordpress');
-define('DB_USER', getenv('WORDPRESS_DB_USER') ?: 'wordpress');
-define('DB_PASSWORD', getenv('WORDPRESS_DB_PASSWORD') ?: 'wordpress_pass');
-define('DB_HOST', getenv('WORDPRESS_DB_HOST') ?: 'db:3306');
+// Railway MySQL commonly provides: MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE
+// Our compose/prod setup uses: WORDPRESS_DB_HOST, WORDPRESS_DB_NAME, WORDPRESS_DB_USER, WORDPRESS_DB_PASSWORD
+$db_name = getenv('WORDPRESS_DB_NAME') ?: getenv('MYSQLDATABASE') ?: 'wordpress';
+$db_user = getenv('WORDPRESS_DB_USER') ?: getenv('MYSQLUSER') ?: 'wordpress';
+$db_pass = getenv('WORDPRESS_DB_PASSWORD') ?: getenv('MYSQLPASSWORD') ?: 'wordpress_pass';
+
+$db_host = getenv('WORDPRESS_DB_HOST');
+if (!$db_host) {
+  $mysql_host = getenv('MYSQLHOST');
+  $mysql_port = getenv('MYSQLPORT');
+  if ($mysql_host && $mysql_port) {
+    $db_host = $mysql_host . ':' . $mysql_port;
+  } elseif ($mysql_host) {
+    $db_host = $mysql_host;
+  } else {
+    $db_host = 'db:3306';
+  }
+}
+
+define('DB_NAME', $db_name);
+define('DB_USER', $db_user);
+define('DB_PASSWORD', $db_pass);
+define('DB_HOST', $db_host);
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 
