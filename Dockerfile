@@ -26,7 +26,7 @@ WORKDIR /app
 
 # Install from lockfile for deterministic builds
 COPY mcnabventures/composer.json mcnabventures/composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader --no-audit
+RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader --no-security-blocking
 
 ############################
 # 3) Runtime (WordPress)
