@@ -26,7 +26,9 @@
   background-repeat: no-repeat;
   
   // Subtle gradient overlay - lighter, more natural
-  .wp-block-cover__background {
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
     background: linear-gradient(
       to right,
       rgba(14, 85, 115, 0.65) 0%,
@@ -37,7 +39,7 @@
   }
   
   // Content wrapper
-  .wp-block-cover__inner-container {
+  .hero__inner {
     max-width: 480px;
     padding: 0;
     position: relative;
@@ -75,11 +77,11 @@
   }
   
   // Buttons inside hero - Navy pill button with teal arrow
-  .wp-block-button {
+  .hero__actions {
     margin-top: $spacing-sm;
   }
   
-  .wp-block-button__link {
+  .hero__button {
     background: $color-navy !important;
     color: $color-white !important;
     font-family: $font-body;
@@ -93,10 +95,9 @@
     gap: 1.5rem;
     position: relative;
     width: 330px;
+    text-decoration: none;
     
-    // Teal arrow icon
-    &::after {
-      content: '→';
+    .hero__button-arrow {
       font-size: 1.25rem;
       font-weight: $font-weight-regular;
       color: $color-teal;
@@ -108,15 +109,14 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(14, 85, 115, 0.4);
       
-      &::after {
+      .hero__button-arrow {
         transform: translateX(4px);
       }
     }
   }
   
-  // Scroll indicator at bottom center
-  &::after {
-    content: '';
+  // Scroll indicator at bottom center (real element to avoid WP pseudo-element conflicts)
+  .hero__scroll-indicator {
     position: absolute;
     bottom: $spacing-xl;
     left: 50%;
@@ -127,7 +127,14 @@
     border-radius: 50%;
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.8)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat center center;
     animation: scrollBounce 2s ease-in-out infinite;
-    cursor: pointer;
+    cursor: pointer; 
+    padding: 0;
+    outline: none;
+    appearance: none;
+
+    @include breakpoint-up('lg') {
+      bottom: $spacing-2xl;
+    }
   }
   
   // Responsive
@@ -136,11 +143,11 @@
     padding: $spacing-xl $spacing-md $spacing-3xl !important;
     border-radius: $border-radius-lg;
     
-    .wp-block-cover__inner-container {
+    .hero__inner {
       max-width: 100%;
     }
     
-    .wp-block-cover__background {
+    .hero__overlay {
       background: linear-gradient(
         to top,
         rgba(14, 85, 115, 0.75) 0%,

@@ -19,7 +19,7 @@ section.side-component {
   overflow: hidden;
 }
 
-.side-component.wp-block-columns {
+.side-component__inner {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
@@ -40,12 +40,9 @@ section.side-component {
   max-width: 320px;
   margin: 0 auto;
   
-  &.wp-block-column {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-basis: auto !important;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
   
   // Pill-shaped background - Mobile: rounded rectangle
   &::before {
@@ -61,16 +58,15 @@ section.side-component {
     
     // Tablet (768px+)
     @include breakpoint-up('lg') {
-      top: 4rem;
+      top: 0rem;
       left: -100vw;
       right: 0;
-      bottom: 4rem;
+      bottom: 0rem;
       border-radius: 0 7rem 7rem 0;
     }
   }
   
   // Logo container
-  .wp-block-image,
   .logo-container {
     position: relative;
     z-index: 1;
@@ -103,9 +99,7 @@ section.side-component {
   padding: 0 $spacing-sm;
   width: 100%;
   
-  &.wp-block-column {
-    flex-basis: auto !important;
-  }
+  // no Gutenberg column wrapper
 }
 
 // ==========================================================================
@@ -189,7 +183,7 @@ section.side-component {
     padding: $spacing-2xl $spacing-lg;
   }
   
-  .side-component.wp-block-columns {
+  .side-component__inner {
     gap: $spacing-2xl;
   }
   
@@ -224,7 +218,7 @@ section.side-component {
     overflow: visible;
   }
   
-  .side-component.wp-block-columns {
+  .side-component__inner {
     flex-direction: row;
     align-items: center;
     max-width: 1400px;
@@ -271,7 +265,7 @@ section.side-component {
     padding: $spacing-4xl 0;
   }
   
-  .side-component.wp-block-columns {
+  .side-component__inner {
     padding: 0 $spacing-3xl;
     gap: $spacing-4xl;
   }

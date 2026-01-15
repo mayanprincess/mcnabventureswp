@@ -1,17 +1,17 @@
 {# Side Component - Twig Template #}
 <section class="side-component">
-  <div class="wp-block-columns side-component">
+  <div class="side-component__inner">
     {# Logo Column #}
-    <div class="wp-block-column side-pill">
+    <div class="side-pill">
       {% if logo %}
-        <div class="wp-block-image logo-container">
+        <div class="logo-container">
           <img src="{{ logo }}" alt="{{ badge }}">
         </div>
       {% endif %}
     </div>
     
     {# Content Column #}
-    <div class="wp-block-column side-main-content">
+    <div class="side-main-content">
       {% if badge %}
         <span class="side-minitext">{{ badge }}</span>
       {% endif %}

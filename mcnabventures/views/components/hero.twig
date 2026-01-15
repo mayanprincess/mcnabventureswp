@@ -1,17 +1,24 @@
 {# Hero Component - Twig Template #}
-<div class="groups-hero wp-block-cover" style="background-image: url('{{ background_image }}');">
-  <span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span>
-  <div class="wp-block-cover__inner-container">
+<section
+  class="groups-hero hero"
+  {% if background_image %}style="background-image: url('{{ background_image }}');"{% endif %}
+>
+  <div class="hero__overlay" aria-hidden="true"></div>
+
+  <div class="hero__inner">
     {% if title %}
-      <h1>{{ title }}</h1>
+      <h1 class="hero__title">{{ title }}</h1>
     {% endif %}
-    
+
     {% if button_text and button_url %}
-      <div class="wp-block-button">
-        <a class="wp-block-button__link" href="{{ button_url }}">
-          {{ button_text }}
+      <div class="hero__actions">
+        <a class="hero__button" href="{{ button_url }}">
+          <span class="hero__button-text">{{ button_text }}</span>
+          <span class="hero__button-arrow" aria-hidden="true">→</span>
         </a>
       </div>
     {% endif %}
   </div>
-</div>
+
+  <button class="hero__scroll-indicator" type="button" aria-label="Scroll down"></button>
+</section>
