@@ -5,7 +5,7 @@
     <div class="side-pill">
       {% if logo %}
         <div class="logo-container">
-          <img src="{{ logo }}" alt="{{ badge }}">
+          <img src="{{ logo.url ?? logo }}" alt="{{ (logo.alt ?? badge)|e }}">
         </div>
       {% endif %}
     </div>

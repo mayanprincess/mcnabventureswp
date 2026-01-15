@@ -1,0 +1,62 @@
+{# Highlight(s) Component - Twig Template #}
+{# Data:
+  - title: string
+  - items: [{ image: (string|array), content: (html string) }]
+#}
+
+<section class="highlights" aria-labelledby="highlights-title">
+  <div class="highlights__inner">
+    {% if title %}
+      <h2 id="highlights-title" class="highlights__title">{{ title }}</h2>
+    {% endif %}
+
+    {% set slides = items ?? [] %}
+
+    <div class="highlights__viewport" data-highlights-viewport>
+      <div class="highlights__track" data-highlights-track>
+        {% for item in slides %}
+          {% set img = item.image ?? null %}
+          {% set imgUrl = img.url ?? img %}
+          {% set imgAlt = img.alt ?? '' %}
+
+          <article class="highlights__slide" data-highlights-slide>
+            {% if imgUrl %}
+              <div class="highlights__media">
+                <img class="highlights__img" src="{{ imgUrl }}" alt="{{ imgAlt|e }}" loading="lazy" decoding="async">
+              </div>
+            {% endif %}
+
+            {% if item.content %}
+              <div class="highlights__text">
+                {{ item.content|raw }}
+              </div>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if slides|length > 1 %}
+      <div class="highlights__controls" data-highlights-controls>
+        <div class="highlights__dots" role="tablist" aria-label="Highlights pagination">
+          {% for _ in slides %}
+            <button
+              class="highlights__dot"
+              type="button"
+              data-highlights-dot
+              data-index="{{ loop.index0 }}"
+              aria-label="Go to slide {{ loop.index }}"
+              aria-current="{{ loop.first ? 'true' : 'false' }}"
+            ></button>
+          {% endfor %}
+        </div>
+
+        <div class="highlights__arrows">
+          <button class="highlights__arrow highlights__arrow--prev" type="button" data-highlights-prev aria-label="Previous slide"></button>
+          <button class="highlights__arrow highlights__arrow--next" type="button" data-highlights-next aria-label="Next slide"></button>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+

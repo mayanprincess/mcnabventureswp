@@ -1,0 +1,193 @@
+// ==========================================================================
+// HIGHLIGHTS COMPONENT - McNab Ventures
+// ==========================================================================
+// Lightweight slider using CSS scroll-snap + tiny JS for dots/arrows
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.highlights {
+  background: #F6F4EF;
+  padding: $spacing-3xl 0;
+
+  @include breakpoint-up('lg') {
+    padding: $spacing-4xl 0;
+  }
+}
+
+.highlights__inner {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.highlights__title {
+  font-family: $font-heading;
+  font-weight: $font-weight-light;
+  font-style: normal;
+  color: $color-navy;
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 $spacing-2xl;
+}
+
+.highlights__viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 0px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.highlights__track {
+  display: flex;
+  gap: $spacing-lg;
+  align-items: flex-start;
+  padding-bottom: $spacing-sm;
+}
+
+.highlights__slide {
+  scroll-snap-align: start;
+  flex: 0 0 85%;
+
+  @include breakpoint-up('md') {
+    flex-basis: 60%;
+  }
+
+  @include breakpoint-up('lg') {
+    flex-basis: 45%;
+  }
+}
+
+.highlights__media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  background: rgba($color-gray, 0.15);
+  margin-bottom: $spacing-lg;
+}
+
+.highlights__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.highlights__text {
+  max-width: 34rem;
+  font-family: $font-body;
+  color: $color-navy;
+  font-size: $font-size-base;
+  line-height: $line-height-relaxed;
+
+  p {
+    margin: 0;
+  }
+
+  strong,
+  b {
+    color: $color-teal;
+    font-weight: $font-weight-bold;
+  }
+}
+
+.highlights__controls {
+  margin-top: $spacing-2xl;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-lg;
+}
+
+.highlights__dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.highlights__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  border: none;
+  padding: 0;
+  background: rgba($color-gray, 0.35);
+  cursor: pointer;
+  transition: background-color $transition-fast, transform $transition-fast;
+
+  &[aria-current="true"] {
+    background: $color-teal;
+    transform: scale(1.05);
+  }
+
+  &:hover {
+    background: rgba($color-gray, 0.55);
+  }
+}
+
+.highlights__arrows {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.highlights__arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 2px solid rgba($color-navy, 0.35);
+  background: transparent;
+  color: $color-navy;
+  cursor: pointer;
+  transition: all $transition-fast;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px 20px;
+    opacity: 1;
+  }
+
+  &--prev::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%230E5573' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+  }
+
+  &--next::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%230E5573' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+  }
+
+  &:hover {
+    border-color: rgba($color-navy, 0.7);
+    background: $color-navy;
+
+    &::before {
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  &[disabled],
+  &[aria-disabled="true"] {
+    border-color: rgba($color-gray, 0.35);
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover {
+      background: transparent;
+
+      &::before {
+        filter: none;
+      }
+    }
+  }
+}
+

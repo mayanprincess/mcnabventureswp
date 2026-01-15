@@ -104,6 +104,38 @@ function mcnab_get_registered_components() {
         ],
       ],
     ],
+    'highlights' => [
+      'slug' => 'highlights',
+      'location' => 'page',
+      'name' => 'Highlight Component',
+      'description' => 'Horizontal slider of highlight cards (image + rich text).',
+      'file' => 'highlights.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Section Title',
+          'type' => 'text',
+          'default' => 'Get the highlights.',
+          'required' => false,
+        ],
+        'items' => [
+          'label' => 'Highlight Items',
+          'type' => 'repeater',
+          'required' => false,
+          'sub_fields' => [
+            'image' => [
+              'label' => 'Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'content' => [
+              'label' => 'Text (WYSIWYG)',
+              'type' => 'wysiwyg',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
   ];
 }
 
