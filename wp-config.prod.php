@@ -102,6 +102,33 @@ define('DB_COLLATE', '');
 
 $table_prefix = getenv('WORDPRESS_TABLE_PREFIX') ?: 'wp_';
 
+/**
+ * Railway / reverse-proxy HTTPS handling
+ * Railway terminates TLS at the edge and forwards to the container over HTTP.
+ * Without this, WordPress generates http:// asset URLs (mixed content).
+ */
+$xf_proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+if ($xf_proto === 'https') {
+  $_SERVER['HTTPS'] = 'on';
+  $_SERVER['SERVER_PORT'] = 443;
+}
+
+// Force SSL in wp-admin when HTTPS is detected
+if (!defined('FORCE_SSL_ADMIN')) {
+  define('FORCE_SSL_ADMIN', true);
+}
+
+// Set WP_HOME / WP_SITEURL if not provided, to avoid http:// URLs behind proxies
+if (!defined('WP_HOME') || !defined('WP_SITEURL')) {
+  $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? ($_SERVER['HTTP_HOST'] ?? '');
+  if ($host) {
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $base = $scheme . '://' . $host;
+    if (!defined('WP_HOME')) define('WP_HOME', $base);
+    if (!defined('WP_SITEURL')) define('WP_SITEURL', $base);
+  }
+}
+
 // Debug (default off in prod)
 define('WP_DEBUG', filter_var(getenv('WP_DEBUG') ?: false, FILTER_VALIDATE_BOOLEAN));
 define('WP_DEBUG_LOG', filter_var(getenv('WP_DEBUG_LOG') ?: false, FILTER_VALIDATE_BOOLEAN));
