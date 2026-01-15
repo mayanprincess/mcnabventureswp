@@ -58,6 +58,15 @@ COPY plugins /usr/src/wordpress/wp-content/plugins
 # Railway exposes $PORT; default to 8080 if not set
 ENV PORT=8080
 
+# Default runtime limits (override in Railway Variables if needed)
+ENV CLIENT_MAX_BODY_SIZE=128m \
+  PHP_UPLOAD_MAX_FILESIZE=128M \
+  PHP_POST_MAX_SIZE=128M \
+  PHP_MEMORY_LIMIT=512M \
+  PHP_MAX_EXECUTION_TIME=300 \
+  PHP_MAX_INPUT_TIME=300 \
+  PHP_MAX_INPUT_VARS=5000
+
 # Keep official entrypoint (copies /usr/src/wordpress -> /var/www/html when needed)
 CMD ["bash", "/usr/local/bin/railway-start.sh"]
 
