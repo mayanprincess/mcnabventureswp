@@ -2,6 +2,10 @@
 
 A custom WordPress theme for the Genetics Learning Hub, built with modern development practices and the 23andMe brand design system.
 
+## 🤖 IA Component Creation Guide (MOST IMPORTANT)
+
+Lee primero: `IA_COMPONENT_CREATION_GUIDE.md`
+
 ## 🚀 Quick Start
 
 ### Prerequisites
