@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo - Componente Multimedia</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-white: #FFFFFF;
+      --color-navy: #0E5573;
+      --color-teal: #2FBFB3;
+      --color-sand: #C9C5B8;
+      --color-copper: #C49A6D;
+      --color-gold: #C9A441;
+      --color-black: #000000;
+      --color-gray-dark: #3A3A3A;
+      --color-gray: #6B6B6B;
+      --color-gray-light: #9C9EA1;
+      --color-off-white: #F5F5F3;
+      --font-heading: 'Literata', Georgia, 'Times New Roman', serif;
+      --font-body: 'Fustat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html {
+      font-size: 18px;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: var(--font-body);
+      background: var(--color-off-white);
+      color: var(--color-gray-dark);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .multimedia {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      width: 100%;
+    }
+
+    .multimedia__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .multimedia__title {
+      font-family: var(--font-heading);
+      font-weight: 300;
+      font-size: 2.5rem;
+      color: var(--color-navy);
+      margin: 0;
+    }
+
+    .multimedia__tab-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.25rem;
+      background: var(--color-off-white);
+      padding: 0.25rem;
+      border-radius: 1.5rem;
+      height: 36px;
+    }
+
+    .multimedia__tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.667rem;
+      font-weight: 800;
+      color: var(--color-navy);
+      background: transparent;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 250ms ease;
+    }
+
+    .multimedia__tab:hover {
+      background: rgba(14, 85, 115, 0.05);
+    }
+
+    .multimedia__tab.is-active {
+      background: var(--color-white);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .multimedia__gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1rem;
+      width: 100%;
+      height: 648px;
+      overflow: hidden;
+    }
+
+    .multimedia__item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.5rem;
+      background: var(--color-off-white);
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+
+    .multimedia__item:nth-child(1) {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .multimedia__media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .multimedia__play-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      width: 44px;
+      height: 44px;
+      margin: 1rem;
+      background: #092a42;
+      border: none;
+      border-radius: 1.125rem;
+      cursor: pointer;
+      transition: all 250ms ease;
+      color: var(--color-white);
+    }
+
+    .multimedia__play-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .multimedia__play-icon {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .multimedia__controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .multimedia__pagination {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .multimedia__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 0.25rem;
+      background: var(--color-gray-light);
+      cursor: pointer;
+      transition: all 250ms ease;
+    }
+
+    .multimedia__dot.is-active {
+      background: var(--color-gold);
+      transform: scale(1.25);
+    }
+
+    .multimedia__dot:hover {
+      background: var(--color-navy);
+    }
+
+    .multimedia__navigation {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .multimedia__nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: var(--color-sand);
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 250ms ease;
+      color: var(--color-gray-dark);
+    }
+
+    .multimedia__nav-btn:hover:not(:disabled) {
+      background: var(--color-navy);
+      color: var(--color-white);
+      transform: scale(1.05);
+    }
+
+    .multimedia__nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .multimedia__nav-btn svg {
+      width: 15px;
+      height: 28px;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    /* Demo images with gradient placeholders */
+    .demo-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0E5573, #2FBFB3);
+      color: white;
+      font-weight: bold;
+      width: 100%;
+      height: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-family: var(--font-heading);
+      font-weight: 300;
+      font-size: 2.5rem;
+      color: var(--color-navy);
+      margin: 0 0 0.5rem;
+    }
+
+    .header p {
+      color: var(--color-gray);
+      margin: 0;
+    }
+
+    .info-box {
+      background: var(--color-white);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      margin-top: 2rem;
+      border-left: 4px solid var(--color-gold);
+    }
+
+    .info-box h3 {
+      margin-top: 0;
+      color: var(--color-navy);
+    }
+
+    .info-box code {
+      background: var(--color-off-white);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1024px) {
+      .multimedia__gallery {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        height: 500px;
+        gap: 0.5rem;
+      }
+
+      .multimedia__item:nth-child(1) {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+
+      .multimedia__item:nth-child(n+5) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .multimedia__gallery {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        height: auto;
+      }
+
+      .multimedia__item {
+        min-height: 200px;
+      }
+
+      .multimedia__item:nth-child(1) {
+        grid-column: span 2;
+      }
+
+      .multimedia__header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .multimedia__title {
+        font-size: 2rem;
+      }
+
+      .multimedia__tab-list {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem;
+      }
+
+      .multimedia__gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .multimedia__item:nth-child(1) {
+        grid-column: span 1;
+      }
+
+      .multimedia__title {
+        font-size: 1.5rem;
+      }
+
+      .multimedia__tab {
+        font-size: 0.667rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Componente Multimedia McNab Ventures</h1>
+      <p>Galería responsive con tabs, carrusel y reproducción de videos</p>
+    </div>
+
+    <section class="multimedia" data-multimedia>
+      <!-- Header: Title + Tab Toggle -->
+      <div class="multimedia__header">
+        <h2 class="multimedia__title">Multimedia</h2>
+
+        <div class="multimedia__tab-list">
+          <button class="multimedia__tab is-active" data-tab="photo">
+            Photos
+          </button>
+          <button class="multimedia__tab" data-tab="video">
+            Videos
+          </button>
+        </div>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="multimedia__gallery" data-gallery>
+        <!-- Item 1: Landscape with play button -->
+        <div class="multimedia__item" data-item-index="0" data-item-type="image">
+          <div class="demo-image">Imagen 1</div>
+          <button class="multimedia__play-btn">
+            <svg class="multimedia__play-icon" viewBox="0 0 24 24">
+              <path d="M5 3l14 9-14 9V3z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="multimedia__item" data-item-index="1" data-item-type="image">
+          <div class="demo-image">Imagen 2</div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="multimedia__item" data-item-index="2" data-item-type="image">
+          <div class="demo-image">Imagen 3</div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="multimedia__item" data-item-index="3" data-item-type="image">
+          <div class="demo-image">Imagen 4</div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="multimedia__item" data-item-index="4" data-item-type="image">
+          <div class="demo-image">Imagen 5</div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="multimedia__item" data-item-index="5" data-item-type="video">
+          <div class="demo-image">Video 1</div>
+        </div>
+
+        <!-- Item 7 -->
+        <div class="multimedia__item" data-item-index="6" data-item-type="image">
+          <div class="demo-image">Imagen 6</div>
+        </div>
+
+        <!-- Item 8 -->
+        <div class="multimedia__item" data-item-index="7" data-item-type="image">
+          <div class="demo-image">Imagen 7</div>
+        </div>
+      </div>
+
+      <!-- Pagination & Navigation -->
+      <div class="multimedia__controls">
+        <div class="multimedia__pagination" data-pagination>
+          <div class="multimedia__dot is-active" data-page="0"></div>
+          <div class="multimedia__dot" data-page="1"></div>
+          <div class="multimedia__dot" data-page="2"></div>
+        </div>
+
+        <div class="multimedia__navigation">
+          <button class="multimedia__nav-btn multimedia__nav-btn--prev" data-nav="prev">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <button class="multimedia__nav-btn multimedia__nav-btn--next" data-nav="next">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="info-box">
+      <h3>Características</h3>
+      <ul>
+        <li><strong>Responsive:</strong> Desktop (4 col), Tablet (3 col), Mobile (2 col)</li>
+        <li><strong>Tabs:</strong> Filtrado por Fotos/Videos</li>
+        <li><strong>Carrusel:</strong> Paginación con dots y botones anterior/siguiente</li>
+        <li><strong>Accesible:</strong> ARIA labels, navegación por teclado</li>
+        <li><strong>Sin dependencias:</strong> Vanilla JavaScript puro</li>
+        <li><strong>Design System:</strong> Colores y tipografía de McNab Ventures</li>
+      </ul>
+
+      <h3>Archivos Generados</h3>
+      <ul>
+        <li><code>views/components/multimedia.twig</code> - Plantilla Twig</li>
+        <li><code>assets/scss/components/_multimedia.scss</code> - Estilos SCSS</li>
+        <li><code>assets/js/multimedia.js</code> - Lógica JavaScript</li>
+        <li><code>inc/components-registry.php</code> - Registro en ACF</li>
+      </ul>
+
+      <h3>Registrado en WordPress</h3>
+      <p>
+        El componente está disponible en el panel de componentes de WordPress.
+        Accede a: <code>Tema → Componentes → Multimedia</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- Script multimedia del proyecto -->
+  <script>
+    // Mock de JavaScript para demostración
+    document.addEventListener('DOMContentLoaded', function() {
+      const multimediaContainers = document.querySelectorAll('[data-multimedia]');
+      if (!multimediaContainers.length) return;
+
+      multimediaContainers.forEach(container => {
+        const tabs = Array.from(container.querySelectorAll('[data-tab]'));
+        const prevBtn = container.querySelector('[data-nav="prev"]');
+        const nextBtn = container.querySelector('[data-nav="next"]');
+
+        // Tabs
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('is-active'));
+            tab.classList.add('is-active');
+          });
+        });
+
+        // Navigation buttons disabled state
+        let currentPage = 0;
+        const totalPages = 3;
+
+        function updateNav() {
+          if (prevBtn) prevBtn.disabled = currentPage <= 0;
+          if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1;
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', () => {
+            if (currentPage > 0) {
+              currentPage--;
+              updateNav();
+            }
+          });
+        }
+
+        if (nextBtn) {
+          nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages - 1) {
+              currentPage++;
+              updateNav();
+            }
+          });
+        }
+
+        updateNav();
+      });
+    });
+  </script>
+</body>
+</html>
