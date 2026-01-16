@@ -1,0 +1,234 @@
+# McNab Ventures Design System Rules for Cursor
+
+## Project Stack
+- **CMS:** WordPress with Timber (Twig templating)
+- **Styling:** SCSS compiled to CSS
+- **Components:** Custom Gutenberg blocks + ACF
+- **Fonts:** Literata (headings) + Fustat (body)
+
+## Color Palette
+```
+Primary:    #0E5573 (Navy)
+Secondary:  #2FBFB3 (Teal)
+Accent:     #C9A441 (Gold)
+Highlight:  #C49A6D (Copper)
+Neutral:    #C9C5B8 (Sand)
+Text:       #3A3A3A (Dark Gray)
+Background: #FFFFFF (White)
+```
+
+## Typography Scale
+```
+Base Size: 1rem (18px)
+Ratios: 1.25 (perfect fifth)
+
+xs:   0.667rem (12px)
+sm:   0.833rem (15px)
+base: 1rem (18px)
+lg:   1.222rem (22px)
+xl:   1.444rem (26px)
+2xl:  1.722rem (31px)
+3xl:  2.056rem (37px)
+4xl:  2.5rem (45px)
+5xl:  3rem (54px)
+```
+
+## Spacing Scale
+```
+xs:  0.25rem (4px)
+sm:  0.5rem (8px)
+md:  1rem (16px)
+lg:  1.5rem (24px)
+xl:  2rem (32px)
+2xl: 3rem (48px)
+3xl: 4rem (64px)
+4xl: 6rem (96px)
+```
+
+## Responsive Breakpoints
+```
+Mobile: 480px
+Tablet: 768px
+Desktop: 1024px
+Wide: 1200px
+
+Usage: @include breakpoint-up('md') { /* code */ }
+```
+
+## File Structure
+```
+mcnabventures/
+├── assets/scss/
+│   ├── abstracts/      (variables, mixins)
+│   ├── base/           (reset, typography)
+│   ├── layout/         (containers)
+│   ├── components/     (component styles)
+│   └── utilities/      (animations, backgrounds)
+├── views/components/   (Twig templates)
+├── inc/                (PHP: ACF, Gutenberg, Timber setup)
+├── theme.json          (WordPress block theme config)
+└── functions.php       (Theme setup)
+```
+
+## Component Architecture
+
+### File Naming
+- Template: `component-name.twig`
+- Styles: `_component-name.scss`
+- PHP fields: `component_name_field` (ACF)
+
+### CSS Methodology (BEM)
+```scss
+.block { }
+.block__element { }
+.block--modifier { }
+.block.is-state { }
+```
+
+### SCSS Import Pattern
+```scss
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.component {
+  color: $color-primary;
+  @include breakpoint-up('md') { }
+}
+```
+
+## Key SCSS Variables
+```scss
+// Colors
+$color-navy, $color-teal, $color-gold, $color-sand, $color-copper
+$color-primary, $color-secondary, $color-accent
+$color-text-primary, $color-bg-primary
+
+// Typography
+$font-heading: 'Literata', serif;
+$font-body: 'Fustat', sans-serif;
+$font-weight-light: 300;
+$font-weight-bold: 700;
+
+// Spacing
+$spacing-md, $spacing-lg, $spacing-xl (etc)
+
+// Effects
+$shadow-sm, $shadow-md, $shadow-lg, $shadow-gold
+$border-radius-md, $border-radius-lg
+$transition-base: 250ms ease;
+```
+
+## Essential Mixins
+```scss
+@include breakpoint-up('md')        // Responsive
+@include flex-center                 // Center items
+@include button-base                 // Reset button
+@include card                        // Card styles
+@include gold-text                   // Gradient text
+@include heading-light               // Literata Light
+@include snap-text                   // Fustat ExtraBold uppercase
+@include button-ripple               // Ripple animation
+```
+
+## Gradients
+```scss
+$gradient-gold: linear-gradient(135deg, #D4B44A 0%, #C9A441 100%)
+$gradient-navy-teal: linear-gradient(135deg, #0E5573 0%, #2FBFB3 100%)
+$gradient-copper-gold: linear-gradient(135deg, #C49A6D 0%, #C9A441 100%)
+$gradient-sand-white: linear-gradient(180deg, #C9C5B8 0%, #FFFFFF 100%)
+```
+
+## Key Components
+- **Hero:** views/components/hero.twig
+- **Highlights:** views/components/highlights.twig
+- **Accordion:** views/components/accordion.twig
+- **Side Component:** views/components/side-component.twig
+- **Buttons:** CSS classes .btn-primary, .btn-secondary, .btn-gold, .btn-copper
+
+## Animations
+```scss
+@keyframes revealFadeUp { }      // Scroll reveal
+@keyframes revealFadeLeft { }    // Side reveal
+@keyframes ripple { }             // Button ripple
+@keyframes pulse { }              // Pulse effect
+```
+
+## WordPress Integration
+- **Theme Config:** theme.json (colors, fonts, sizes)
+- **Custom Blocks:** inc/gutenberg-blocks.php
+- **Fields:** inc/acf-fields.php
+- **Setup:** inc/timber-setup.php
+
+## Accessibility
+- Use semantic HTML in Twig templates
+- Maintain color contrast ≥ 4.5:1
+- Always visible focus states
+- Respect `prefers-reduced-motion`
+- Use aria-labels and aria-hidden appropriately
+
+## Build Commands
+```bash
+npm run sass          # Watch mode (development)
+npm run sass:build    # Single compile (production)
+```
+
+## CSS Custom Properties (available in JS)
+```css
+--color-navy, --color-teal, --color-gold
+--font-heading, --font-body
+--font-size-base, --font-size-lg, --font-size-xl
+```
+
+## Common Patterns
+
+### Button in Twig
+```twig
+<a class="btn btn-primary" href="{{ url }}">{{ text }}</a>
+```
+
+### Responsive Container
+```twig
+<div class="container">
+  {{ content }}
+</div>
+```
+
+### Flex Center
+```scss
+.center {
+  @include flex-center;
+}
+```
+
+### Responsive Typography
+```scss
+.heading {
+  font-size: var(--font-size-2xl);
+
+  @include breakpoint-up('md') {
+    font-size: var(--font-size-3xl);
+  }
+}
+```
+
+## Performance Notes
+- SCSS compiled to single main.css
+- CSS custom properties for dynamic values
+- Critical.scss for above-the-fold styles
+- Lazy loading for images (loading="lazy")
+
+## Figma Integration
+When implementing Figma designs:
+1. Map colors to $color-* variables
+2. Use typography scale from theme.json
+3. Convert spacings to $spacing-* scale
+4. Component names should match .twig files
+5. Document all interactive states
+
+## Important Files
+- `assets/scss/abstracts/_variables.scss` - All tokens
+- `assets/scss/abstracts/_mixins.scss` - Utility mixins
+- `assets/scss/main.scss` - Main import file
+- `theme.json` - WordPress settings
+- `functions.php` - Theme initialization
+- `inc/components-registry.php` - Component registry
