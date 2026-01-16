@@ -86,6 +86,15 @@ add_action('wp_enqueue_scripts', function () {
     '0.1.0',
     true
   );
+
+  // Scroll Reveal Script
+  wp_enqueue_script(
+    'mcnabventures-scroll-reveal',
+    get_template_directory_uri() . '/assets/js/scroll-reveal.js',
+    [],
+    '0.1.0',
+    true
+  );
 });
 
 /**

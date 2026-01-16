@@ -1,0 +1,116 @@
+// ==========================================================================
+// SCROLL REVEAL ANIMATIONS
+// McNab Ventures - Entrance animations on scroll
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+
+// ==========================================================================
+// KEYFRAMES - Scroll Reveal Animations
+// ==========================================================================
+
+@keyframes revealFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealFadeLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes revealFadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ==========================================================================
+// BASE REVEAL CLASS
+// ==========================================================================
+
+[data-scroll-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ==========================================================================
+// REVEAL DIRECTION VARIATIONS
+// ==========================================================================
+
+[data-scroll-reveal="left"] {
+  transform: translateX(-32px);
+
+  &.revealed {
+    transform: translateX(0);
+  }
+}
+
+[data-scroll-reveal="right"] {
+  transform: translateX(32px);
+
+  &.revealed {
+    transform: translateX(0);
+  }
+}
+
+[data-scroll-reveal="up"] {
+  transform: translateY(32px);
+
+  &.revealed {
+    transform: translateY(0);
+  }
+}
+
+// ==========================================================================
+// STAGGERED DELAY FOR MULTIPLE ELEMENTS
+// ==========================================================================
+
+[data-scroll-reveal*="delay"] {
+  &:nth-child(1) { transition-delay: 0s; }
+  &:nth-child(2) { transition-delay: 0.1s; }
+  &:nth-child(3) { transition-delay: 0.2s; }
+  &:nth-child(4) { transition-delay: 0.3s; }
+  &:nth-child(5) { transition-delay: 0.4s; }
+  &:nth-child(6) { transition-delay: 0.5s; }
+}
+
+// ==========================================================================
+// RESPETA PREFERENCIA DE USUARIO - REDUCIR MOVIMIENTO
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1;
+    transform: none !important;
+    transition: none;
+
+    &.revealed {
+      transform: none;
+    }
+  }
+}

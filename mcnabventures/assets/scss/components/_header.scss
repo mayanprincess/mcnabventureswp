@@ -5,12 +5,43 @@
 @use '../abstracts/variables' as *;
 @use '../abstracts/mixins' as *;
 
+// ==========================================================================
+// KEYFRAMES - Header Shimmer Effect
+// ==========================================================================
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
 .site-header {
   position: sticky;
   top: 0;
   z-index: 1000;
   background-color: $color-white;
   transition: all $transition-base;
+
+  // Shimmer effect en top bar
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(201, 164, 65, 0.3),
+      transparent
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 6s infinite;
+  }
   
   // Scrolled state - frosted glass effect
   &.is-scrolled {
@@ -18,6 +49,26 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    // Cambiar shimmer a teal cuando está scrolled
+    &::before {
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(47, 191, 179, 0.2),
+        transparent
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 6s infinite;
+    }
+  }
+
+  // Respeta preferencia de usuario para reducir movimiento
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+      opacity: 0.3;
+    }
   }
   
   body.admin-bar & {

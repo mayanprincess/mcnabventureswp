@@ -6,6 +6,79 @@
 @use '../abstracts/variables' as *;
 @use '../abstracts/mixins' as *;
 
+// ==========================================================================
+// KEYFRAMES - Button Animations
+// ==========================================================================
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(201, 164, 65, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(201, 164, 65, 0);
+  }
+}
+
+@keyframes pulseSecondary {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(47, 191, 179, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(47, 191, 179, 0);
+  }
+}
+
+// ==========================================================================
+// RIPPLE MIXIN - Aplicar a cualquier botón
+// ==========================================================================
+
+@mixin button-ripple {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: scale(0);
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &:active::before {
+    animation: ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+// Respeta reducir movimiento
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary::before,
+  .btn-secondary::before,
+  .btn-gold::before,
+  .btn-copper::before,
+  .hero__button::before,
+  .highlights__arrow::before {
+    animation: none;
+  }
+}
+
 .btn,
 .wp-block-button__link,
 .wp-element-button {
@@ -29,31 +102,52 @@
 }
 
 .btn-primary {
+  @include button-ripple;
   color: $color-white;
   background: $color-navy;
-  
+
   &:hover {
     background: color.adjust($color-navy, $lightness: -5%);
     transform: translateY(-1px);
     box-shadow: $shadow-md;
   }
+
+  // CTA Button - Pulse effect
+  &.is-cta {
+    animation: pulse 2s infinite;
+
+    &:hover {
+      animation: none;
+    }
+  }
 }
 
 .btn-secondary {
+  @include button-ripple;
   color: $color-white;
   background: $color-teal;
-  
+
   &:hover {
     background: color.adjust($color-teal, $lightness: -5%);
     transform: translateY(-1px);
     box-shadow: $shadow-md;
   }
+
+  // CTA Button - Pulse effect (secondary color)
+  &.is-cta {
+    animation: pulseSecondary 2s infinite;
+
+    &:hover {
+      animation: none;
+    }
+  }
 }
 
 .btn-gold {
+  @include button-ripple;
   color: $color-white;
   background: $gradient-gold;
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: $shadow-gold;
@@ -61,9 +155,10 @@
 }
 
 .btn-copper {
+  @include button-ripple;
   color: $color-white;
   background: $color-copper;
-  
+
   &:hover {
     background: color.adjust($color-copper, $lightness: -5%);
     transform: translateY(-1px);

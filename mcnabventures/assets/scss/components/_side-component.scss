@@ -8,6 +8,32 @@
 @use '../abstracts/mixins' as *;
 
 // ==========================================================================
+// KEYFRAMES - Side Component Entrance Animations
+// ==========================================================================
+
+@keyframes logoZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ==========================================================================
 // MOBILE FIRST - Base Styles (Phone)
 // ==========================================================================
 
@@ -31,7 +57,7 @@ section.side-component {
 }
 
 // ==========================================================================
-// SIDE PILL - Logo Container (Mobile)
+// SIDE PILL - Logo Container (Mobile) with entrance animation
 // ==========================================================================
 
 .side-pill {
@@ -39,11 +65,14 @@ section.side-component {
   width: 100%;
   max-width: 320px;
   margin: 0 auto;
-  
+
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
+  // Entrance animation - Logo zoom in
+  animation: logoZoomIn 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+
   // Pill-shaped background - Mobile: rounded rectangle
   &::before {
     content: '';
@@ -55,7 +84,7 @@ section.side-component {
     background-color: #F5F3EE;
     border-radius: 4rem;
     z-index: 0;
-    
+
     // Tablet (768px+)
     @include breakpoint-up('lg') {
       top: 0rem;
@@ -65,7 +94,7 @@ section.side-component {
       border-radius: 0 7rem 7rem 0;
     }
   }
-  
+
   // Logo container
   .logo-container {
     position: relative;
@@ -76,17 +105,22 @@ section.side-component {
     width: 100%;
     padding: $spacing-2xl $spacing-xl;
     min-height: 180px;
-    
+
     img {
       width: 140px;
       height: auto;
       object-fit: contain;
+      transition: transform $transition-base;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
     }
   }
 }
 
 // ==========================================================================
-// SIDE MAIN CONTENT - Text (Mobile)
+// SIDE MAIN CONTENT - Text (Mobile) with entrance animation
 // ==========================================================================
 
 .side-main-content {
@@ -98,12 +132,13 @@ section.side-component {
   text-align: center;
   padding: 0 $spacing-sm;
   width: 100%;
-  
-  // no Gutenberg column wrapper
+
+  // Entrance animation
+  animation: slideInRight 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
 }
 
 // ==========================================================================
-// SIDE MINITEXT - Badge/Label (Mobile)
+// SIDE MINITEXT - Badge/Label (Mobile) with entrance animation
 // ==========================================================================
 
 .side-minitext {
@@ -119,15 +154,32 @@ section.side-component {
   text-transform: uppercase;
   margin-bottom: $spacing-lg;
   width: fit-content;
+
+  // Entrance animation - Badge pop-in
+  animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // ==========================================================================
-// SIDE CONTENT - WYSIWYG Content Area (Mobile)
+// SIDE CONTENT - WYSIWYG Content Area (Mobile) with entrance animation
 // ==========================================================================
 
 .side-content {
   margin-bottom: $spacing-lg;
-  
+
+  // Entrance animation
+  animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+
   h1, h2, h3, h4, h5, h6,
   p {
     font-family: $font-heading;
@@ -139,7 +191,7 @@ section.side-component {
     margin: 0;
     text-align: center;
   }
-  
+
   // Bold text = Teal color
   strong,
   b {
@@ -147,11 +199,11 @@ section.side-component {
     font-weight: $font-weight-light;
     font-style: italic;
   }
-  
+
   a {
     color: $color-teal;
     text-decoration: none;
-    
+
     &:hover {
       text-decoration: underline;
     }
@@ -159,7 +211,7 @@ section.side-component {
 }
 
 // ==========================================================================
-// SIDE DESCRIPTION - Additional Text (Mobile)
+// SIDE DESCRIPTION - Additional Text (Mobile) with entrance animation
 // ==========================================================================
 
 .side-description {
@@ -172,6 +224,25 @@ section.side-component {
   text-align: center;
   margin: 0;
   max-width: 100%;
+
+  // Entrance animation
+  animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.7s both;
+}
+
+// ==========================================================================
+// RESPETA PREFERENCIA DE USUARIO - REDUCIR MOVIMIENTO
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .side-pill,
+  .side-main-content,
+  .side-minitext,
+  .side-content,
+  .side-description {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 // ==========================================================================

@@ -1,0 +1,136 @@
+// ==========================================================================
+// FOCUS STATES - Keyboard Navigation & Accessibility
+// McNab Ventures
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+
+// Reset browser defaults
+*:focus {
+  outline: none;
+}
+
+// ==========================================================================
+// FOCUS RING MIXIN
+// ==========================================================================
+
+@mixin focus-ring($color: $color-teal, $width: 2px, $offset: 4px) {
+  outline: $width solid $color;
+  outline-offset: $offset;
+  border-radius: 2px;
+  box-shadow: 0 0 0 $width rgba($color, 0.15);
+}
+
+// ==========================================================================
+// APPLY TO INTERACTIVE ELEMENTS
+// ==========================================================================
+
+// Generic links
+a:focus-visible {
+  @include focus-ring($color-teal, 2px, 3px);
+  transition: all $transition-fast;
+}
+
+// Buttons
+button:focus-visible,
+input[type="button"]:focus-visible,
+input[type="submit"]:focus-visible {
+  @include focus-ring($color-teal, 2px, 4px);
+  transition: all $transition-fast;
+}
+
+// Form elements
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  @include focus-ring($color-teal, 2px, 2px);
+  transition: all $transition-fast;
+}
+
+// ==========================================================================
+// BUTTON VARIANTS
+// ==========================================================================
+
+.btn-primary:focus-visible,
+.wp-block-button__link:focus-visible,
+.wp-element-button:focus-visible {
+  @include focus-ring($color-teal, 2px, 4px);
+  transition: all $transition-fast;
+}
+
+.btn-secondary:focus-visible {
+  @include focus-ring($color-navy, 2px, 4px);
+  transition: all $transition-fast;
+}
+
+.btn-gold:focus-visible {
+  @include focus-ring($color-navy, 2px, 4px);
+  transition: all $transition-fast;
+}
+
+.btn-copper:focus-visible {
+  @include focus-ring($color-navy, 2px, 4px);
+  transition: all $transition-fast;
+}
+
+.hero__button:focus-visible {
+  @include focus-ring($color-teal, 2px, 4px);
+  transition: all $transition-fast;
+}
+
+// ==========================================================================
+// NAVIGATION
+// ==========================================================================
+
+.nav-link:focus-visible {
+  @include focus-ring($color-teal, 2px, 2px);
+  border-radius: 4px;
+}
+
+.custom-logo-link:focus-visible {
+  @include focus-ring($color-navy, 2px, 4px);
+  border-radius: 4px;
+}
+
+// ==========================================================================
+// COMPONENT-SPECIFIC
+// ==========================================================================
+
+// Accordion summary
+details > summary:focus-visible {
+  @include focus-ring($color-teal, 2px, 4px);
+  border-radius: 4px;
+}
+
+// Highlights dots
+.highlights__dot:focus-visible {
+  @include focus-ring($color-navy, 2px, 2px);
+  border-radius: 50%;
+}
+
+// Highlights arrows
+.highlights__arrow:focus-visible {
+  @include focus-ring($color-navy, 2px, 2px);
+  border-radius: 4px;
+}
+
+// ==========================================================================
+// HIGH CONTRAST MODE SUPPORT
+// ==========================================================================
+
+@media (prefers-contrast: more) {
+  *:focus-visible {
+    outline-width: 3px;
+    outline-offset: 2px;
+  }
+}
+
+// ==========================================================================
+// REDUCED MOTION SUPPORT
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  *:focus-visible {
+    transition: none;
+  }
+}
