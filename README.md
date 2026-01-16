@@ -23,13 +23,25 @@ Luego abre:
 - `http://localhost:8080` (WordPress)
 - `http://localhost:8081` (phpMyAdmin)
 
-### 2) Compilar estilos (Sass watch)
+### 2) Instalar dependencias del theme
 
-En otra terminal:
+Entra al directorio del theme e instala Composer y Node:
 
 ```bash
 cd mcnabventures
+composer install
 npm install
+```
+
+Esto instala:
+- **Timber** (templating engine con Twig)
+- **Node dependencies** (Sass compiler, etc.)
+
+### 3) Compilar estilos (Sass watch)
+
+En otra terminal dentro de `mcnabventures/`:
+
+```bash
 npm run sass
 ```
 

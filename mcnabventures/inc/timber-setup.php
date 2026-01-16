@@ -16,32 +16,9 @@ if (!class_exists('Timber\Timber')) {
 use Timber\Timber;
 
 /**
- * Configure Timber locations
+ * Configure Timber locations (Timber 2.0+ format)
  */
-add_filter('timber/locations', function($paths) {
-  // Ensure $paths is an array
-  if (!is_array($paths)) {
-    $paths = [];
-  }
-  
-  // Flatten any nested arrays (in case other filters added arrays)
-  $flat_paths = [];
-  foreach ($paths as $path) {
-    if (is_array($path)) {
-      $flat_paths = array_merge($flat_paths, array_filter($path, 'is_string'));
-    } elseif (is_string($path)) {
-      $flat_paths[] = $path;
-    }
-  }
-  
-  // Add views directory
-  $views_path = get_template_directory() . '/views';
-  if (!in_array($views_path, $flat_paths)) {
-    $flat_paths[] = $views_path;
-  }
-  
-  return $flat_paths;
-});
+Timber::$locations = get_template_directory() . '/views';
 
 /**
  * Render a component using Twig
