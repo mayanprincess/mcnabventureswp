@@ -1,5 +1,7 @@
 {
   "enabledPlugins": {
-    "php-lsp@claude-plugins-official": true
+    "php-lsp@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "figma@claude-plugins-official": true
   }
 }
