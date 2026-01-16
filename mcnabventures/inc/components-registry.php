@@ -136,6 +136,71 @@ function mcnab_get_registered_components() {
         ],
       ],
     ],
+    'multimedia' => [
+      'slug' => 'multimedia',
+      'location' => 'page',
+      'name' => 'Multimedia Component',
+      'description' => 'Gallery with tabbed filtering (Photos/Videos), carousel pagination, and play buttons.',
+      'file' => 'multimedia.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Section Title',
+          'type' => 'text',
+          'default' => 'Multimedia',
+          'required' => false,
+        ],
+        'tabs' => [
+          'label' => 'Tab Filters',
+          'type' => 'repeater',
+          'required' => false,
+          'sub_fields' => [
+            'name' => [
+              'label' => 'Tab Name',
+              'type' => 'text',
+            ],
+            'type' => [
+              'label' => 'Media Type',
+              'type' => 'select',
+              'choices' => [
+                'photo' => 'Photo',
+                'video' => 'Video',
+              ],
+            ],
+          ],
+        ],
+        'items' => [
+          'label' => 'Media Items',
+          'type' => 'repeater',
+          'required' => false,
+          'sub_fields' => [
+            'url' => [
+              'label' => 'Image/Video URL',
+              'type' => 'url',
+              'required' => false,
+            ],
+            'alt' => [
+              'label' => 'Alt Text',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'type' => [
+              'label' => 'Media Type',
+              'type' => 'select',
+              'choices' => [
+                'image' => 'Image',
+                'video' => 'Video',
+              ],
+            ],
+          ],
+        ],
+        'items_per_page' => [
+          'label' => 'Items Per Carousel Page',
+          'type' => 'number',
+          'default' => 4,
+          'required' => false,
+        ],
+      ],
+    ],
   ];
 }
 

@@ -6,7 +6,12 @@
       "Skill(frontend-design)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nAñadir ejemplos prácticos de implementación\n\nIMPLEMENTATION_EXAMPLES.md proporciona guías paso a paso:\n- Crear nuevos componentes \\(Twig + SCSS\\)\n- Usar modificadores BEM para variantes\n- Responsive design mobile-first\n- Utilidades de color reutilizables\n- Animaciones y transiciones CSS\n- Patrones de accesibilidad completos\n- Container y grid systems\n- Ajustes de color dinámicos\n- Registro de ACF\n- Bloques Gutenberg personalizados\n- Patrones Twig comunes\n- Debugging y testing\n\nCo-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(find:*)",
+      "mcp__plugin_figma_figma__get_design_context",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "Bash(npm run sass:build:*)",
+      "Bash(grep:*)"
     ]
   }
 }

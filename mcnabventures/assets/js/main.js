@@ -206,6 +206,7 @@
     initSmoothScroll();
     initHeaderScroll();
     initHighlights();
+    // Multimedia component is initialized from multimedia.js
   });
 
 })();

@@ -1,0 +1,377 @@
+// ==========================================================================
+// MULTIMEDIA COMPONENT - McNab Ventures
+// ==========================================================================
+// Gallery with tabbed filtering, carousel pagination, and play buttons
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.multimedia {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2xl;
+  width: 100%;
+
+  // Header: Title + Tab Toggle
+  &__header {
+    @include flex-between;
+    flex-wrap: wrap;
+    gap: $spacing-lg;
+
+    @include respond-to('md') {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__title {
+    @include heading-light;
+    color: $color-primary;
+    font-size: $font-size-4xl;
+    margin: 0;
+    flex: 1;
+
+    @include respond-to('md') {
+      font-size: $font-size-3xl;
+    }
+
+    @include respond-to('sm') {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  // Tab List Styling
+  &__tab-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-xs;
+    background: $color-bg-secondary;
+    padding: $spacing-xs;
+    border-radius: $border-radius-xl;
+    height: 36px;
+    width: auto;
+
+    @include respond-to('md') {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+
+  &__tab {
+    @include button-base;
+    padding: $spacing-sm 0.5rem;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-extrabold;
+    color: $color-primary;
+    background: transparent;
+    border: none;
+    border-radius: $border-radius-lg;
+    transition: all $transition-base;
+    cursor: pointer;
+    text-transform: capitalize;
+
+    &:hover {
+      background: rgba($color-primary, 0.05);
+    }
+
+    &.is-active {
+      background: $color-white;
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  // Gallery Grid
+  &__gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: $spacing-md;
+    width: 100%;
+    height: 648px;
+    overflow: hidden;
+
+    @include breakpoint-up('lg') {
+      height: 648px;
+    }
+
+    @include respond-to('lg') {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      height: 500px;
+      gap: $spacing-sm;
+    }
+
+    @include respond-to('md') {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      height: auto;
+      gap: $spacing-sm;
+    }
+
+    @include respond-to('sm') {
+      grid-template-columns: 1fr;
+      height: auto;
+      gap: $spacing-sm;
+    }
+  }
+
+  &__item {
+    position: relative;
+    overflow: hidden;
+    border-radius: $border-radius-xl;
+    background: $color-bg-secondary;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+
+    &:nth-child(1) {
+      grid-column: span 2;
+      grid-row: span 2;
+
+      @include respond-to('lg') {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+
+      @include respond-to('md') {
+        grid-column: span 2;
+        grid-row: span 1;
+      }
+
+      @include respond-to('sm') {
+        grid-column: span 1;
+      }
+    }
+
+    &:nth-child(2) {
+      grid-column: span 1;
+      grid-row: span 1;
+
+      @include respond-to('md') {
+        grid-column: span 1;
+      }
+    }
+
+    &:nth-child(3) {
+      grid-column: span 1;
+      grid-row: span 1;
+
+      @include respond-to('md') {
+        grid-column: span 1;
+      }
+    }
+
+    &:nth-child(4) {
+      grid-column: span 2;
+      grid-row: span 1;
+
+      @include respond-to('lg') {
+        grid-column: span 1;
+      }
+
+      @include respond-to('md') {
+        grid-column: span 1;
+      }
+    }
+
+    &:nth-child(5) {
+      @include respond-to('lg') {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+
+      @include respond-to('md') {
+        display: none;
+      }
+    }
+
+    &:nth-child(6) {
+      @include respond-to('md') {
+        display: none;
+      }
+    }
+
+    &:nth-child(7) {
+      @include respond-to('md') {
+        display: none;
+      }
+    }
+
+    &:nth-child(8) {
+      @include respond-to('md') {
+        display: none;
+      }
+    }
+  }
+
+  &__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__play-btn {
+    @include flex-center;
+    position: relative;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    margin: $spacing-md;
+    background: $color-navy;
+    border: none;
+    border-radius: $border-radius-xl;
+    cursor: pointer;
+    transition: all $transition-base;
+    color: $color-white;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: $shadow-lg;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    @include respond-to('sm') {
+      width: 36px;
+      height: 36px;
+      margin: $spacing-sm;
+    }
+  }
+
+  &__play-icon {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    @include respond-to('sm') {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  // Controls: Pagination + Navigation
+  &__controls {
+    @include flex-between;
+    flex-wrap: wrap;
+    gap: $spacing-lg;
+    width: 100%;
+
+    @include respond-to('sm') {
+      gap: $spacing-md;
+    }
+  }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: $border-radius-sm;
+    background: $color-gray-light;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &.is-active {
+      background: $color-accent;
+      transform: scale(1.25);
+    }
+
+    &:hover {
+      background: $color-primary;
+    }
+  }
+
+  &__navigation {
+    display: flex;
+    gap: $spacing-md;
+    align-items: center;
+
+    @include respond-to('sm') {
+      gap: $spacing-sm;
+    }
+  }
+
+  &__nav-btn {
+    @include flex-center;
+    width: 44px;
+    height: 44px;
+    background: $color-sand;
+    border: none;
+    border-radius: $border-radius-full;
+    cursor: pointer;
+    transition: all $transition-base;
+    color: $color-text-primary;
+    opacity: 1;
+
+    svg {
+      width: 15px;
+      height: 28px;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    &:hover:not(:disabled) {
+      background: $color-primary;
+      color: $color-white;
+      transform: scale(1.05);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &--prev {
+      svg {
+        transform: scaleY(-1);
+      }
+    }
+
+    @include respond-to('sm') {
+      width: 36px;
+      height: 36px;
+
+      svg {
+        width: 12px;
+        height: 22px;
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  // Loading state
+  &.is-loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  // Empty state
+  &.is-empty {
+    min-height: 300px;
+    @include flex-center;
+    color: $color-text-muted;
+    font-style: italic;
+  }
+}

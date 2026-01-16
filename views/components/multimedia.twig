@@ -1,0 +1,109 @@
+{#
+  Multimedia Component
+  Display media gallery with tabs (Photos/Videos) and carousel pagination
+
+  Expected variables:
+  - title (string): Component title, default "Multimedia"
+  - tabs (array): Tab items with 'name' and 'type' properties
+  - items (array): Media items with 'url', 'alt', and optional 'type' (image|video)
+  - itemsPerPage (int): Number of items per carousel page, default 4
+#}
+
+{% set title = title|default('Multimedia') %}
+{% set tabs = tabs|default([{name: 'Photos', type: 'photo'}, {name: 'Videos', type: 'video'}]) %}
+{% set items = items|default([]) %}
+{% set itemsPerPage = itemsPerPage|default(4) %}
+
+<section class="multimedia" data-multimedia>
+  {# Header: Title + Tab Toggle #}
+  <div class="multimedia__header">
+    <h2 class="multimedia__title">{{ title }}</h2>
+
+    {% if tabs|length > 1 %}
+      <div class="multimedia__tab-list">
+        {% for tab in tabs %}
+          <button
+            class="multimedia__tab {% if loop.first %}is-active{% endif %}"
+            data-tab="{{ tab.type }}"
+            aria-label="Ver {{ tab.name }}"
+            type="button"
+          >
+            {{ tab.name }}
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  {# Gallery Grid #}
+  <div class="multimedia__gallery" data-gallery>
+    {% for item in items %}
+      <div
+        class="multimedia__item"
+        data-item-index="{{ loop.index0 }}"
+        data-item-type="{{ item.type|default('image') }}"
+      >
+        {% if item.type|default('image') == 'video' %}
+          <video
+            class="multimedia__media"
+            src="{{ item.url }}"
+            alt="{{ item.alt|default('') }}"
+            loading="lazy"
+          ></video>
+          <button class="multimedia__play-btn" aria-label="Reproducir video">
+            <svg class="multimedia__play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M5 3l14 9-14 9V3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        {% else %}
+          <img
+            class="multimedia__media"
+            src="{{ item.url }}"
+            alt="{{ item.alt|default('') }}"
+            loading="lazy"
+          >
+          {% if loop.first %}
+            <button class="multimedia__play-btn" aria-label="Ver más">
+              <svg class="multimedia__play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {# Pagination & Navigation #}
+  <div class="multimedia__controls">
+    <div class="multimedia__pagination" data-pagination>
+      {% set pageCount = ((items|length - 1) / itemsPerPage)|round(0, 'ceil')|default(1) %}
+      {% for i in range(0, pageCount - 1) %}
+        <div class="multimedia__dot {% if i == 0 %}is-active{% endif %}" data-page="{{ i }}"></div>
+      {% endfor %}
+    </div>
+
+    <div class="multimedia__navigation">
+      <button
+        class="multimedia__nav-btn multimedia__nav-btn--prev"
+        data-nav="prev"
+        aria-label="Página anterior"
+        type="button"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button
+        class="multimedia__nav-btn multimedia__nav-btn--next"
+        data-nav="next"
+        aria-label="Página siguiente"
+        type="button"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
