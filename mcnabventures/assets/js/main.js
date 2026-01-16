@@ -73,6 +73,7 @@
 
   /**
    * Header scroll behavior - frosted glass effect on scroll
+   * Optimized with throttling using requestAnimationFrame
    */
   function initHeaderScroll() {
     const header = document.querySelector('.site-header');
@@ -83,12 +84,17 @@
       header.classList.add('is-scrolled');
     }
 
+    let raf = 0;
     window.addEventListener('scroll', function() {
-      if (window.pageYOffset > 10) {
-        header.classList.add('is-scrolled');
-      } else {
-        header.classList.remove('is-scrolled');
-      }
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        if (window.pageYOffset > 10) {
+          header.classList.add('is-scrolled');
+        } else {
+          header.classList.remove('is-scrolled');
+        }
+      });
     }, { passive: true });
   }
 

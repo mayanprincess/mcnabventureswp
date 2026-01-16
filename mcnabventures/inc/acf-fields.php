@@ -176,13 +176,22 @@ add_filter('the_content', function($content) {
   if (is_admin()) {
     return $content;
   }
-  
+
   if (!function_exists('mcnab_render_twig_component')) {
     return $content;
   }
-  
-  // Get Flexible Content data
-  $page_components = get_field('page_components');
+
+  // Get Flexible Content data with caching (1 hour TTL)
+  $post_id = get_the_ID();
+  $cache_key = 'mcnab_page_components_' . $post_id;
+  $page_components = get_transient($cache_key);
+
+  if (false === $page_components) {
+    $page_components = get_field('page_components');
+    if (!empty($page_components)) {
+      set_transient($cache_key, $page_components, 3600); // Cache por 1 hora
+    }
+  }
   
   if (empty($page_components) || !is_array($page_components)) {
     return $content;
@@ -250,3 +259,11 @@ add_filter('the_content', function($content) {
   // Prepend components to content
   return $all_components_html . $content;
 }, 10);
+
+/**
+ * Invalidate component cache when page is updated
+ */
+add_action('save_post_page', function($post_id) {
+  $cache_key = 'mcnab_page_components_' . $post_id;
+  delete_transient($cache_key);
+});

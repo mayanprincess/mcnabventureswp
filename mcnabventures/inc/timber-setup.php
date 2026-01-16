@@ -21,15 +21,42 @@ use Timber\Timber;
 Timber::$locations = get_template_directory() . '/views';
 
 /**
+ * Static cache for image URLs (memoization)
+ */
+$mcnab_image_url_cache = [];
+
+/**
+ * Get attachment image URL with memoization
+ */
+function mcnab_get_attachment_image_url($image_id, $size = 'full') {
+  global $mcnab_image_url_cache;
+
+  if (empty($image_id)) {
+    return '';
+  }
+
+  $cache_key = $image_id . ':' . $size;
+
+  if (isset($mcnab_image_url_cache[$cache_key])) {
+    return $mcnab_image_url_cache[$cache_key];
+  }
+
+  $url = wp_get_attachment_image_url($image_id, $size) ?: '';
+  $mcnab_image_url_cache[$cache_key] = $url;
+
+  return $url;
+}
+
+/**
  * Render a component using Twig
- * 
+ *
  * @param string $component_name Component name (file name without .twig)
  * @param array  $args           Component data (passed directly from Flexible Content)
  * @return void
  */
 function mcnab_render_twig_component($component_name, $args = []) {
   $context = $args;
-  
+
   // Handle ACF image arrays - convert to URL strings
   foreach ($context as $key => $value) {
     if (is_array($value) && isset($value['url'])) {
@@ -37,15 +64,15 @@ function mcnab_render_twig_component($component_name, $args = []) {
       $context[$key] = $value['url'];
     } elseif (is_array($value) && isset($value['ID'])) {
       // ACF image with ID only, get URL
-      $context[$key] = wp_get_attachment_image_url($value['ID'], 'full') ?: '';
+      $context[$key] = mcnab_get_attachment_image_url($value['ID'], 'full');
     } elseif (is_numeric($value) && ($key === 'logo' || $key === 'background_image' || strpos($key, 'image') !== false)) {
       // Image ID as number
-      $context[$key] = wp_get_attachment_image_url($value, 'full') ?: '';
+      $context[$key] = mcnab_get_attachment_image_url($value, 'full');
     }
   }
-  
+
   $template = 'components/' . sanitize_file_name($component_name) . '.twig';
-  
+
   try {
     Timber::render($template, $context);
   } catch (\Exception $e) {

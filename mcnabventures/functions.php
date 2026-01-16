@@ -47,6 +47,7 @@ add_action('after_setup_theme', function () {
 
 /**
  * Enqueue Google Fonts - Literata & Fustat
+ * Cargadas una sola vez para frontend y editor, mejorando performance
  */
 add_action('wp_enqueue_scripts', function () {
   // Google Fonts: Literata (Light 300, Regular 400, Medium 500) & Fustat (Medium 500, Bold 700, ExtraBold 800)
@@ -57,6 +58,13 @@ add_action('wp_enqueue_scripts', function () {
     null
   );
 }, 5);
+
+/**
+ * Reutilizar Google Fonts en Block Editor (sin duplicación)
+ */
+add_action('enqueue_block_editor_assets', function () {
+  wp_enqueue_style('mcnabventures-google-fonts');
+});
 
 /**
  * Enqueue Scripts and Styles
@@ -81,16 +89,15 @@ add_action('wp_enqueue_scripts', function () {
 });
 
 /**
- * Enqueue Google Fonts for Block Editor
+ * Add defer attribute to main script
  */
-add_action('enqueue_block_editor_assets', function () {
-  wp_enqueue_style(
-    'mcnabventures-google-fonts',
-    'https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,400;0,7..72,500;1,7..72,300;1,7..72,400&family=Fustat:wght@400;500;700;800&display=swap',
-    [],
-    null
-  );
-});
+add_filter('script_loader_tag', function($tag, $handle) {
+  if ($handle === 'mcnabventures-main') {
+    return str_replace('src=', 'defer src=', $tag);
+  }
+  return $tag;
+}, 10, 2);
+
 
 /**
  * Add preconnect for Google Fonts to improve performance
@@ -99,6 +106,20 @@ add_action('wp_head', function () {
   echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
   echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
 }, 1);
+
+/**
+ * Inline critical CSS for faster first render
+ * Critical CSS includes: header, hero, typography, reset
+ */
+add_action('wp_head', function () {
+  $critical_css_file = get_template_directory() . '/assets/css/critical.css';
+
+  // Check if critical.css exists, if not use a basic inline version
+  if (file_exists($critical_css_file)) {
+    $critical_css = file_get_contents($critical_css_file);
+    echo '<style>' . wp_strip_all_tags($critical_css) . '</style>' . "\n";
+  }
+}, 2);
 
 /**
  * Customizer Settings for Footer
