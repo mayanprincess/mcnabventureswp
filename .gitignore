@@ -43,7 +43,10 @@ mcnabventures/.sass-cache/
 
 # --- Plugins ---
 # By default we ignore plugins, but we allow ACF PRO to be committed.
+
+plugins/*
 !plugins/.gitkeep
 !plugins/classic-editor/*
+!plugins/advanced-custom-fields-pro/*
 
 
