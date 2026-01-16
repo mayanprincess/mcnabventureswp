@@ -47,6 +47,5 @@ mcnabventures/.sass-cache/
 plugins/*
 !plugins/.gitkeep
 !plugins/classic-editor/*
-!plugins/advanced-custom-fields-pro/*
 
 
