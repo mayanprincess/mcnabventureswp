@@ -80,6 +80,12 @@
     }
   }
 
+  // Galleries Container
+  &__galleries {
+    position: relative;
+    width: 100%;
+  }
+
   // Gallery Grid
   &__gallery {
     display: grid;
@@ -89,6 +95,18 @@
     width: 100%;
     height: 648px;
     overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity $transition-base, visibility $transition-base;
+
+    &.is-active {
+      opacity: 1;
+      visibility: visible;
+      position: relative;
+    }
 
     @include breakpoint-up('lg') {
       height: 648px;
@@ -112,6 +130,22 @@
       grid-template-columns: 1fr;
       height: auto;
       gap: $spacing-sm;
+    }
+  }
+
+  &__gallery-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    width: 100%;
+    color: $color-text-muted;
+    font-style: italic;
+    background: $color-bg-secondary;
+    border-radius: $border-radius-xl;
+
+    p {
+      margin: 0;
     }
   }
 

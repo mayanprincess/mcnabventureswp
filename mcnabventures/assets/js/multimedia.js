@@ -2,7 +2,7 @@
  * Multimedia Component - McNab Ventures
  *
  * Handles:
- * - Tab filtering (Photos/Videos)
+ * - Tab switching (Photos/Videos galleries)
  * - Gallery carousel with pagination
  * - Navigation buttons (prev/next)
  * - Responsive grid adjustments
@@ -16,19 +16,18 @@
     if (!multimediaContainers.length) return;
 
     multimediaContainers.forEach(container => {
-      const gallery = container.querySelector('[data-gallery]');
-      const tabs = Array.from(container.querySelectorAll('[data-tab]'));
+      const tabs = Array.from(container.querySelectorAll('[data-tab-index]'));
+      const galleries = Array.from(container.querySelectorAll('[data-gallery]'));
       const pagination = container.querySelector('[data-pagination]');
-      const dots = Array.from(container.querySelectorAll('[data-pagination] [data-page]'));
       const prevBtn = container.querySelector('[data-nav="prev"]');
       const nextBtn = container.querySelector('[data-nav="next"]');
       const playBtns = Array.from(container.querySelectorAll('.multimedia__play-btn'));
 
-      if (!gallery) return;
+      if (!galleries.length) return;
 
       // State
+      let currentTab = 0;
       let currentPage = 0;
-      let activeTabType = null;
       let itemsPerPage = getItemsPerPage();
 
       /**
@@ -42,52 +41,48 @@
       }
 
       /**
-       * Get all items and apply filters
+       * Get current active gallery
        */
-      function getFilteredItems() {
-        const items = Array.from(gallery.querySelectorAll('.multimedia__item'));
+      function getActiveGallery() {
+        return galleries[currentTab] || galleries[0];
+      }
 
-        if (activeTabType) {
-          return items.filter(item => {
-            const itemType = item.getAttribute('data-item-type');
-            return itemType === activeTabType || activeTabType === 'all';
-          });
-        }
-
-        return items;
+      /**
+       * Get all items in active gallery
+       */
+      function getGalleryItems() {
+        const gallery = getActiveGallery();
+        return Array.from(gallery.querySelectorAll('.multimedia__item'));
       }
 
       /**
        * Get items for current page
        */
       function getPageItems() {
-        const filtered = getFilteredItems();
+        const items = getGalleryItems();
         const start = currentPage * itemsPerPage;
         const end = start + itemsPerPage;
-        return filtered.slice(start, end);
+        return items.slice(start, end);
       }
 
       /**
-       * Get total pages
+       * Get total pages for active gallery
        */
       function getTotalPages() {
-        const filtered = getFilteredItems();
-        return Math.ceil(filtered.length / itemsPerPage);
+        const items = getGalleryItems();
+        return Math.ceil(items.length / itemsPerPage);
       }
 
       /**
        * Update gallery visibility
        */
       function updateGalleryVisibility() {
-        const filtered = getFilteredItems();
+        const items = getGalleryItems();
         const pageItems = getPageItems();
-        const pageItemsIndices = pageItems.map(item =>
-          filtered.indexOf(item)
-        );
+        const pageItemsSet = new Set(pageItems);
 
-        gallery.querySelectorAll('.multimedia__item').forEach(item => {
-          const index = getFilteredItems().indexOf(item);
-          item.style.display = pageItemsIndices.includes(index) ? '' : 'none';
+        items.forEach(item => {
+          item.style.display = pageItemsSet.has(item) ? '' : 'none';
         });
       }
 
@@ -97,39 +92,28 @@
       function updatePaginationDots() {
         const totalPages = getTotalPages();
 
-        // Create dots dynamically if needed
-        if (dots.length !== totalPages && pagination) {
-          pagination.innerHTML = '';
-          for (let i = 0; i < totalPages; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'multimedia__dot';
-            dot.setAttribute('data-page', i);
-            dot.setAttribute('role', 'button');
-            dot.setAttribute('tabindex', '0');
-            dot.setAttribute('aria-label', `Página ${i + 1}`);
+        pagination.innerHTML = '';
+        for (let i = 0; i < totalPages; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'multimedia__dot';
+          dot.setAttribute('data-page', i);
+          dot.setAttribute('role', 'button');
+          dot.setAttribute('tabindex', '0');
+          dot.setAttribute('aria-label', `Página ${i + 1}`);
 
-            if (i === currentPage) {
-              dot.classList.add('is-active');
-            }
-
-            dot.addEventListener('click', () => goToPage(i));
-            dot.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                goToPage(i);
-              }
-            });
-
-            pagination.appendChild(dot);
+          if (i === currentPage) {
+            dot.classList.add('is-active');
           }
-        } else {
-          dots.forEach((dot, index) => {
-            if (index === currentPage) {
-              dot.classList.add('is-active');
-            } else {
-              dot.classList.remove('is-active');
+
+          dot.addEventListener('click', () => goToPage(i));
+          dot.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              goToPage(i);
             }
           });
+
+          pagination.appendChild(dot);
         }
       }
 
@@ -184,19 +168,20 @@
       }
 
       /**
-       * Switch tab and reset pagination
+       * Switch to specific tab
        */
-      function switchTab(tabType) {
-        activeTabType = tabType;
+      function switchTab(tabIndex) {
+        currentTab = tabIndex;
         currentPage = 0;
 
+        // Update active gallery visibility
+        galleries.forEach((gallery, index) => {
+          gallery.classList.toggle('is-active', index === tabIndex);
+        });
+
         // Update active tab UI
-        tabs.forEach(tab => {
-          if (tab.getAttribute('data-tab') === tabType) {
-            tab.classList.add('is-active');
-          } else {
-            tab.classList.remove('is-active');
-          }
+        tabs.forEach((tab, index) => {
+          tab.classList.toggle('is-active', index === tabIndex);
         });
 
         updateGalleryVisibility();
@@ -223,7 +208,8 @@
        */
       function handlePlayClick(btn, index) {
         btn.addEventListener('click', () => {
-          const item = gallery.querySelectorAll('.multimedia__item')[index];
+          const items = getGalleryItems();
+          const item = items[index];
           if (!item) return;
 
           const media = item.querySelector('.multimedia__media');
@@ -235,21 +221,8 @@
       }
 
       // Initialize tabs
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          switchTab(tab.getAttribute('data-tab'));
-        });
-      });
-
-      // Initialize pagination
-      dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => goToPage(index));
-        dot.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            goToPage(index);
-          }
-        });
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => switchTab(index));
       });
 
       // Initialize navigation buttons
@@ -289,9 +262,7 @@
       });
 
       // Initial render
-      updateGalleryVisibility();
-      updatePaginationDots();
-      updateNavigationButtons();
+      switchTab(0);
     });
   }
 

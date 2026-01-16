@@ -4,14 +4,20 @@
 
   Expected variables:
   - title (string): Component title, default "Multimedia"
-  - tabs (array): Tab items with 'name' and 'type' properties
-  - items (array): Media items with 'url', 'alt', and optional 'type' (image|video)
+  - tabs (array): Tab items with 'name', 'gallery_type', 'gallery', and 'videos'
   - itemsPerPage (int): Number of items per carousel page, default 4
+
+  Tab structure:
+  {
+    name: 'Photos',
+    gallery_type: 'gallery' | 'videos',
+    gallery: [{ ID, url, alt, ... }],  // for gallery_type: 'gallery'
+    videos: [{ video_url, video_title }]  // for gallery_type: 'videos'
+  }
 #}
 
 {% set title = title|default('Multimedia') %}
-{% set tabs = tabs|default([{name: 'Photos', type: 'photo'}, {name: 'Videos', type: 'video'}]) %}
-{% set items = items|default([]) %}
+{% set tabs = tabs|default([]) %}
 {% set itemsPerPage = itemsPerPage|default(4) %}
 
 <section class="multimedia" data-multimedia>
@@ -24,7 +30,7 @@
         {% for tab in tabs %}
           <button
             class="multimedia__tab {% if loop.first %}is-active{% endif %}"
-            data-tab="{{ tab.type }}"
+            data-tab-index="{{ loop.index0 }}"
             aria-label="Ver {{ tab.name }}"
             type="button"
           >
@@ -35,40 +41,77 @@
     {% endif %}
   </div>
 
-  {# Gallery Grid #}
-  <div class="multimedia__gallery" data-gallery>
-    {% for item in items %}
+  {# Gallery Grids - One per tab #}
+  <div class="multimedia__galleries">
+    {% for tab in tabs %}
+      {% set tabItems = [] %}
+
+      {# Collect items based on gallery_type #}
+      {% if tab.gallery_type == 'gallery' and tab.gallery %}
+        {# Photo Gallery: Extract images #}
+        {% for image in tab.gallery %}
+          {% set tabItems = tabItems|merge([{
+            type: 'image',
+            url: image.url,
+            alt: image.alt|default(''),
+            id: image.ID|default('')
+          }]) %}
+        {% endfor %}
+      {% elseif tab.gallery_type == 'videos' and tab.videos %}
+        {# Video Gallery: Use video URLs #}
+        {% for video in tab.videos %}
+          {% set tabItems = tabItems|merge([{
+            type: 'video',
+            url: video.video_url,
+            alt: video.video_title|default('Video')
+          }]) %}
+        {% endfor %}
+      {% endif %}
+
       <div
-        class="multimedia__item"
-        data-item-index="{{ loop.index0 }}"
-        data-item-type="{{ item.type|default('image') }}"
+        class="multimedia__gallery {% if loop.first %}is-active{% endif %}"
+        data-gallery
+        data-gallery-index="{{ loop.index0 }}"
       >
-        {% if item.type|default('image') == 'video' %}
-          <video
-            class="multimedia__media"
-            src="{{ item.url }}"
-            alt="{{ item.alt|default('') }}"
-            loading="lazy"
-          ></video>
-          <button class="multimedia__play-btn" aria-label="Reproducir video">
-            <svg class="multimedia__play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M5 3l14 9-14 9V3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+        {% if tabItems|length > 0 %}
+          {% for item in tabItems %}
+            <div
+              class="multimedia__item"
+              data-item-index="{{ loop.index0 }}"
+              data-item-type="{{ item.type }}"
+            >
+              {% if item.type == 'video' %}
+                <video
+                  class="multimedia__media"
+                  src="{{ item.url }}"
+                  loading="lazy"
+                ></video>
+                <button class="multimedia__play-btn" aria-label="Reproducir video" type="button">
+                  <svg class="multimedia__play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M5 3l14 9-14 9V3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              {% else %}
+                <img
+                  class="multimedia__media"
+                  src="{{ item.url }}"
+                  alt="{{ item.alt }}"
+                  loading="lazy"
+                >
+                {% if loop.first %}
+                  <button class="multimedia__play-btn" aria-label="Ver más" type="button">
+                    <svg class="multimedia__play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endfor %}
         {% else %}
-          <img
-            class="multimedia__media"
-            src="{{ item.url }}"
-            alt="{{ item.alt|default('') }}"
-            loading="lazy"
-          >
-          {% if loop.first %}
-            <button class="multimedia__play-btn" aria-label="Ver más">
-              <svg class="multimedia__play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          {% endif %}
+          <div class="multimedia__gallery-empty">
+            <p>No hay contenido para esta galería</p>
+          </div>
         {% endif %}
       </div>
     {% endfor %}
@@ -77,10 +120,7 @@
   {# Pagination & Navigation #}
   <div class="multimedia__controls">
     <div class="multimedia__pagination" data-pagination>
-      {% set pageCount = ((items|length - 1) / itemsPerPage)|round(0, 'ceil')|default(1) %}
-      {% for i in range(0, pageCount - 1) %}
-        <div class="multimedia__dot {% if i == 0 %}is-active{% endif %}" data-page="{{ i }}"></div>
-      {% endfor %}
+      {# Dots will be generated by JavaScript based on active tab #}
     </div>
 
     <div class="multimedia__navigation">

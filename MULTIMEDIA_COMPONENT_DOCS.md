@@ -38,12 +38,22 @@ mcnab_render_twig_component('multimedia');
 {% include 'components/multimedia.twig' with {
   title: 'Nuestros Momentos',
   tabs: [
-    { name: 'Fotos', type: 'photo' },
-    { name: 'Videos', type: 'video' }
-  ],
-  items: [
-    { url: '/images/photo1.jpg', alt: 'Descripción 1', type: 'image' },
-    { url: '/videos/video1.mp4', alt: 'Video 1', type: 'video' }
+    {
+      name: 'Fotos',
+      gallery_type: 'gallery',
+      gallery: [
+        { ID: 1, url: '/images/photo1.jpg', alt: 'Descripción 1' },
+        { ID: 2, url: '/images/photo2.jpg', alt: 'Descripción 2' }
+      ]
+    },
+    {
+      name: 'Videos',
+      gallery_type: 'videos',
+      videos: [
+        { video_url: '/videos/video1.mp4', video_title: 'Video 1' },
+        { video_url: '/videos/video2.mp4', video_title: 'Video 2' }
+      ]
+    }
   ],
   itemsPerPage: 4
 } %}
@@ -57,20 +67,30 @@ Los siguientes campos están disponibles en WordPress:
 - Label: "Section Title"
 - Default: "Multimedia"
 
-### 2. **Tabs de Filtrado** (repeater)
-Sub-campos:
-- **name** (text): Nombre del tab (e.g., "Fotos")
-- **type** (select): Tipo de contenido (photo, video)
+### 2. **Multimedia Tabs** (repeater)
+Cada tab puede ser una galería de fotos O una galería de videos.
 
-### 3. **Items Multimedia** (repeater)
 Sub-campos:
-- **url** (url): URL de imagen o video
-- **alt** (text): Texto alternativo
-- **type** (select): Tipo (image, video)
+- **name** (text): Nombre del tab (e.g., "Fotos", "Videos", "Behind the Scenes")
+- **gallery_type** (select): Tipo de galería
+  - `gallery` → Galería de fotos (campo gallery)
+  - `videos` → Galería de videos (repeater con URLs)
 
-### 4. **Items por Página** (number)
+**Si gallery_type = "gallery":**
+- **gallery** (gallery): Selector de imágenes en WordPress
+  - Upload o selecciona imágenes del media library
+  - Soporta multi-select
+  - Muestra vista previa
+
+**Si gallery_type = "videos":**
+- **videos** (repeater): Lista de videos
+  - **video_url** (url): URL del video (requerido)
+  - **video_title** (text): Título/descripción del video (opcional)
+
+### 3. **Items por Página** (number)
 - Label: "Items Per Carousel Page"
 - Default: 4
+- Aplica a todos los tabs
 
 ## 🎯 Características
 

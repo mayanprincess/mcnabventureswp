@@ -150,45 +150,64 @@ function mcnab_get_registered_components() {
           'required' => false,
         ],
         'tabs' => [
-          'label' => 'Tab Filters',
+          'label' => 'Multimedia Tabs',
           'type' => 'repeater',
           'required' => false,
           'sub_fields' => [
             'name' => [
               'label' => 'Tab Name',
               'type' => 'text',
+              'placeholder' => 'e.g., Photos, Videos, Behind the Scenes',
             ],
-            'type' => [
-              'label' => 'Media Type',
+            'gallery_type' => [
+              'label' => 'Gallery Type',
               'type' => 'select',
               'choices' => [
-                'photo' => 'Photo',
-                'video' => 'Video',
+                'gallery' => 'Photo Gallery (Upload/Select images)',
+                'videos' => 'Video Gallery (Add video URLs)',
+              ],
+              'default' => 'gallery',
+            ],
+            'gallery' => [
+              'label' => 'Photo Gallery',
+              'type' => 'gallery',
+              'required' => false,
+              'conditional_logic' => [
+                [
+                  [
+                    'field' => 'gallery_type',
+                    'operator' => '==',
+                    'value' => 'gallery',
+                  ],
+                ],
               ],
             ],
-          ],
-        ],
-        'items' => [
-          'label' => 'Media Items',
-          'type' => 'repeater',
-          'required' => false,
-          'sub_fields' => [
-            'url' => [
-              'label' => 'Image/Video URL',
-              'type' => 'url',
+            'videos' => [
+              'label' => 'Video Gallery',
+              'type' => 'repeater',
               'required' => false,
-            ],
-            'alt' => [
-              'label' => 'Alt Text',
-              'type' => 'text',
-              'required' => false,
-            ],
-            'type' => [
-              'label' => 'Media Type',
-              'type' => 'select',
-              'choices' => [
-                'image' => 'Image',
-                'video' => 'Video',
+              'conditional_logic' => [
+                [
+                  [
+                    'field' => 'gallery_type',
+                    'operator' => '==',
+                    'value' => 'videos',
+                  ],
+                ],
+              ],
+              'sub_fields' => [
+                'video_url' => [
+                  'label' => 'Video URL',
+                  'type' => 'url',
+                  'placeholder' => 'https://yourdomain.com/videos/myvideo.mp4',
+                  'required' => true,
+                ],
+                'video_title' => [
+                  'label' => 'Video Title',
+                  'type' => 'text',
+                  'placeholder' => 'Video description/title',
+                  'required' => false,
+                ],
               ],
             ],
           ],
