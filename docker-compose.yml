@@ -3,6 +3,7 @@ version: '3.8'
 services:
   db:
     image: mysql:8.0
+    platform: linux/arm64/v8
     container_name: wp_mysql
     restart: unless-stopped
     environment:
@@ -22,6 +23,7 @@ services:
 
   wordpress:
     image: wordpress:latest
+    platform: linux/arm64/v8
     container_name: wp_site
     restart: unless-stopped
     depends_on:
@@ -39,13 +41,13 @@ services:
       - wp_data:/var/www/html
       - ./mcnabventures:/var/www/html/wp-content/themes/mcnabventures
       - ./plugins:/var/www/html/wp-content/plugins
-      - ./wp-config.prod.php:/var/www/html/wp-config.php
       - ./debug.log:/var/www/html/wp-content/debug.log 
     networks:
       - wp_network
 
   phpmyadmin:
     image: phpmyadmin:latest
+    platform: linux/arm64/v8
     container_name: wp_phpmyadmin
     restart: unless-stopped
     depends_on:
