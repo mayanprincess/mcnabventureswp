@@ -139,7 +139,6 @@ img {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(0);
   transition: backdrop-filter 0.3s ease;
-  border-bottom: 1px solid rgba(14, 85, 115, 0.1);
   padding: 1rem 1.5rem;
 
   &.is-scrolled {

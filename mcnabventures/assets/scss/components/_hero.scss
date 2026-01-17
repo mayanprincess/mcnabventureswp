@@ -40,36 +40,61 @@
   // Full viewport height with min-height
   min-height: 700px;
   max-width: 95vw;
-  margin: 20px auto;
+  margin: 0px auto;
   display: flex;
   align-items: flex-start;
-  padding: $spacing-4xl $spacing-4xl $spacing-3xl !important;
+  padding: $spacing-4xl 0 $spacing-3xl !important;
   border-radius: $border-radius-xl;
   overflow: hidden;
   position: relative;
   justify-content: flex-start;
   background-size: cover;
   background-repeat: no-repeat;
-  
+
+  @include breakpoint-up('md') {
+    margin: 10px auto;
+  }
+
   // Subtle gradient overlay - lighter, more natural
   .hero__overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(
       to right,
-      rgba(14, 85, 115, 0.65) 0%,
-      rgba(14, 85, 115, 0.35) 35%,
-      rgba(0, 0, 0, 0.05) 70%,
+      rgba(14, 85, 115, 0.002) 0%,
+      rgba(14, 85, 115, 0.1) 25%,
+      rgba(0, 0, 0, 0.01) 100%,
       transparent 100%
     ) !important;
   }
-  
-  // Content wrapper
+
+  // Content wrapper - aligned with site container
   .hero__inner {
-    max-width: 480px;
-    padding: 0;
+    width: 100%;
+    max-width: $container-2xl;
+    margin: 0 auto;
+    padding-left: $spacing-2xl;
+    padding-right: $spacing-2xl;
     position: relative;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    
+    @include breakpoint-up('md') {
+      padding-left: $spacing-3xl;
+      padding-right: $spacing-3xl;
+    }
+
+    @include breakpoint-up('lg') {
+      padding-left: $spacing-4xl;
+      padding-right: $spacing-4xl;
+    }
+
+    // Content inside limited to readable width
+    > * {
+      max-width: 480px;
+    }
   }
 
   // Headings - Literata Light (300)
@@ -82,12 +107,14 @@
     letter-spacing: -0.01em;
     margin-bottom: $spacing-lg;
     text-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+    margin-left:-50px;
   }
 
   // Hero Title Entrance Animation + Sizes
   h1 {
     animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
     font-size: clamp(2.25rem, 5vw, $font-size-5xl); // 54px max
+    text-align: left;
   }
 
   h2 {
@@ -127,6 +154,7 @@
     position: relative;
     width: 330px;
     text-decoration: none;
+    margin-left:-50px;
     
     .hero__button-arrow {
       font-size: 1.25rem;
@@ -162,6 +190,7 @@
     padding: 0;
     outline: none;
     appearance: none;
+    z-index: 99;
 
     @include breakpoint-up('lg') {
       bottom: $spacing-2xl;
@@ -171,11 +200,12 @@
   // Responsive
   @include respond-to('md') {
     min-height: 70vh;
-    padding: $spacing-xl $spacing-md $spacing-3xl !important;
+    padding: $spacing-xl 0 $spacing-3xl !important;
     border-radius: $border-radius-lg;
 
     .hero__inner {
-      max-width: 100%;
+      padding-left: $spacing-md;
+      padding-right: $spacing-md;
     }
 
     .hero__overlay {
@@ -318,6 +348,8 @@
     right: 0;
     height: 4px;
     background: $gradient-gold;
+    cursor: pointer;
+    z-index: 99;
   }
   
   h1, h2, h3 {

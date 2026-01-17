@@ -104,6 +104,15 @@ add_action('wp_enqueue_scripts', function () {
     '0.1.0',
     true
   );
+
+  // Hero Scroll Indicator Script
+  wp_enqueue_script(
+    'mcnabventures-hero-scroll',
+    get_template_directory_uri() . '/assets/js/hero-scroll.js',
+    [],
+    '0.1.0',
+    true
+  );
 });
 
 /**
