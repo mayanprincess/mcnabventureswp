@@ -1,411 +1,334 @@
-// ==========================================================================
-// MULTIMEDIA COMPONENT - McNab Ventures
-// ==========================================================================
-// Gallery with tabbed filtering, carousel pagination, and play buttons
+/**
+ * Multimedia Component Styles
+ * Photo & Video Gallery with Tab Navigation
+ */
 
 @use '../abstracts/variables' as *;
 @use '../abstracts/mixins' as *;
 
 .multimedia {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-2xl;
-  width: 100%;
+  padding: spacing('2xl') 0;
 
-  // Header: Title + Tab Toggle
-  &__header {
-    @include flex-between;
-    flex-wrap: wrap;
-    gap: $spacing-lg;
-
-    @include respond-to('md') {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  &__inner {
+    @include container;
   }
 
   &__title {
     @include heading-light;
-    color: $color-primary;
-    font-size: $font-size-4xl;
-    margin: 0;
-    flex: 1;
+    font-size: $font-size-3xl;
+    margin-bottom: spacing('xl');
+    color: $color-navy;
+    text-align: center;
+  }
 
-    @include respond-to('md') {
-      font-size: $font-size-3xl;
-    }
+  /**
+   * Tab Navigation
+   */
+  &__tabs {
+    @include flex-center;
+    gap: spacing('md');
+    margin-bottom: spacing('2xl');
+    border-bottom: 2px solid $color-sand;
+    flex-wrap: wrap;
 
-    @include respond-to('sm') {
-      font-size: $font-size-2xl;
+    @include breakpoint-up('md') {
+      gap: spacing('lg');
     }
   }
 
-  // Tab List Styling
-  &__tab-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-xs;
-    background: $color-bg-secondary;
-    padding: $spacing-xs;
-    border-radius: $border-radius-xl;
-    height: 36px;
-    width: auto;
-
-    @include respond-to('md') {
-      width: 100%;
-      max-width: 400px;
-    }
-  }
-
-  &__tab {
+  &__tab-button {
     @include button-base;
-    padding: $spacing-sm 0.5rem;
-    font-size: $font-size-xs;
-    font-weight: $font-weight-extrabold;
-    color: $color-primary;
+    position: relative;
+    padding: spacing('md') spacing('lg');
+    font-size: $font-size-base;
+    font-family: $font-body;
+    font-weight: 500;
+    color: $color-text-primary;
     background: transparent;
     border: none;
-    border-radius: $border-radius-lg;
-    transition: all $transition-base;
     cursor: pointer;
-    text-transform: capitalize;
+    transition: color $transition-base, border-color $transition-base;
 
     &:hover {
-      background: rgba($color-primary, 0.05);
+      color: $color-navy;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: $color-navy;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform $transition-base;
     }
 
     &.is-active {
-      background: $color-white;
-      box-shadow: $shadow-sm;
+      color: $color-navy;
+      font-weight: 600;
+
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-navy;
+      outline-offset: 4px;
     }
   }
 
-  // Galleries Container
-  &__galleries {
-    position: relative;
-    width: 100%;
+  /**
+   * Tab Panels
+   */
+  &__panel {
+    display: none;
+    animation: fadeIn $transition-base ease-out;
+
+    &.is-active {
+      display: block;
+    }
   }
 
-  // Gallery Grid
+  /**
+   * Photo Gallery
+   */
   &__gallery {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: $spacing-md;
-    width: 100%;
-    height: 648px;
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: opacity $transition-base, visibility $transition-base;
+    margin-bottom: spacing('2xl');
+  }
 
-    &.is-active {
-      opacity: 1;
-      visibility: visible;
-      position: relative;
+  &__gallery-track {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: spacing('md');
+    margin-bottom: spacing('xl');
+
+    @include breakpoint-up('md') {
+      grid-template-columns: repeat(3, 1fr);
+      gap: spacing('lg');
     }
 
     @include breakpoint-up('lg') {
-      height: 648px;
-    }
-
-    @include respond-to('lg') {
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      height: 500px;
-      gap: $spacing-sm;
-    }
-
-    @include respond-to('md') {
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: auto;
-      height: auto;
-      gap: $spacing-sm;
-    }
-
-    @include respond-to('sm') {
-      grid-template-columns: 1fr;
-      height: auto;
-      gap: $spacing-sm;
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
-  &__gallery-empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 300px;
-    width: 100%;
-    color: $color-text-muted;
-    font-style: italic;
-    background: $color-bg-secondary;
-    border-radius: $border-radius-xl;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  &__item {
+  &__gallery-item {
     position: relative;
+    margin: 0;
     overflow: hidden;
-    border-radius: $border-radius-xl;
-    background: $color-bg-secondary;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-
-    &:nth-child(1) {
-      grid-column: span 2;
-      grid-row: span 2;
-
-      @include respond-to('lg') {
-        grid-column: span 2;
-        grid-row: span 2;
-      }
-
-      @include respond-to('md') {
-        grid-column: span 2;
-        grid-row: span 1;
-      }
-
-      @include respond-to('sm') {
-        grid-column: span 1;
-      }
-    }
-
-    &:nth-child(2) {
-      grid-column: span 1;
-      grid-row: span 1;
-
-      @include respond-to('md') {
-        grid-column: span 1;
-      }
-    }
-
-    &:nth-child(3) {
-      grid-column: span 1;
-      grid-row: span 1;
-
-      @include respond-to('md') {
-        grid-column: span 1;
-      }
-    }
-
-    &:nth-child(4) {
-      grid-column: span 2;
-      grid-row: span 1;
-
-      @include respond-to('lg') {
-        grid-column: span 1;
-      }
-
-      @include respond-to('md') {
-        grid-column: span 1;
-      }
-    }
-
-    &:nth-child(5) {
-      @include respond-to('lg') {
-        grid-column: span 1;
-        grid-row: span 1;
-      }
-
-      @include respond-to('md') {
-        display: none;
-      }
-    }
-
-    &:nth-child(6) {
-      @include respond-to('md') {
-        display: none;
-      }
-    }
-
-    &:nth-child(7) {
-      @include respond-to('md') {
-        display: none;
-      }
-    }
-
-    &:nth-child(8) {
-      @include respond-to('md') {
-        display: none;
-      }
-    }
+    border-radius: $border-radius-lg;
+    aspect-ratio: 1;
   }
 
-  &__media {
-    position: absolute;
-    inset: 0;
+  &__gallery-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    transition: transform $transition-base ease;
+  }
+
+  &__gallery-item:hover &__gallery-img {
+    transform: scale(1.05);
   }
 
   &__play-btn {
-    @include flex-center;
-    position: relative;
-    z-index: 2;
-    width: 44px;
-    height: 44px;
-    margin: $spacing-md;
-    background: $color-navy;
-    border: none;
-    border-radius: $border-radius-xl;
-    cursor: pointer;
-    transition: all $transition-base;
-    color: $color-white;
-
-    &:hover {
-      transform: scale(1.1);
-      box-shadow: $shadow-lg;
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-
-    @include respond-to('sm') {
-      width: 36px;
-      height: 36px;
-      margin: $spacing-sm;
-    }
-  }
-
-  &__play-icon {
-    width: 24px;
-    height: 24px;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-
-    @include respond-to('sm') {
-      width: 18px;
-      height: 18px;
-    }
-  }
-
-  // Controls: Pagination + Navigation
-  &__controls {
-    @include flex-between;
-    flex-wrap: wrap;
-    gap: $spacing-lg;
-    width: 100%;
-
-    @include respond-to('sm') {
-      gap: $spacing-md;
-    }
-  }
-
-  &__pagination {
-    display: flex;
-    align-items: center;
-    gap: $spacing-md;
-  }
-
-  &__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: $border-radius-sm;
-    background: $color-gray-light;
-    cursor: pointer;
-    transition: all $transition-base;
-
-    &.is-active {
-      background: $color-accent;
-      transform: scale(1.25);
-    }
-
-    &:hover {
-      background: $color-primary;
-    }
-  }
-
-  &__navigation {
-    display: flex;
-    gap: $spacing-md;
-    align-items: center;
-
-    @include respond-to('sm') {
-      gap: $spacing-sm;
-    }
-  }
-
-  &__nav-btn {
-    @include flex-center;
-    width: 44px;
-    height: 44px;
-    background: $color-sand;
+    @include button-base;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    background: rgba($color-navy, 0.8);
     border: none;
     border-radius: $border-radius-full;
     cursor: pointer;
-    transition: all $transition-base;
-    color: $color-text-primary;
+    opacity: 0;
+    transition: opacity $transition-base, background-color $transition-base;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include breakpoint-up('md') {
+      width: 64px;
+      height: 64px;
+    }
+
+    &:hover {
+      background: rgba($color-navy, 0.95);
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-teal;
+      outline-offset: 4px;
+      opacity: 1;
+    }
+  }
+
+  &__gallery-item:hover &__play-btn,
+  &__play-btn:focus-visible {
     opacity: 1;
+  }
 
-    svg {
-      width: 15px;
-      height: 28px;
-      stroke: currentColor;
-      stroke-width: 2;
+  &__play-icon {
+    width: 0;
+    height: 0;
+    border-left: 12px solid $color-gold;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    margin-left: 4px;
+  }
+
+  /**
+   * Video Gallery
+   */
+  &__videos {
+    margin-bottom: spacing('2xl');
+  }
+
+  &__videos-track {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: spacing('lg');
+    margin-bottom: spacing('xl');
+
+    @include breakpoint-up('md') {
+      grid-template-columns: repeat(2, 1fr);
     }
 
-    &:hover:not(:disabled) {
-      background: $color-primary;
-      color: $color-white;
-      transform: scale(1.05);
+    @include breakpoint-up('lg') {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__video-item {
+    display: flex;
+    flex-direction: column;
+    gap: spacing('md');
+  }
+
+  &__video-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: $border-radius-lg;
+    background: #000;
+    aspect-ratio: 16 / 9;
+
+    video {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
+
+  &__video-title {
+    @include heading-medium;
+    font-size: $font-size-lg;
+    margin: 0;
+    color: $color-navy;
+  }
+
+  /**
+   * Pagination
+   */
+  &__pagination {
+    @include flex-center;
+    gap: spacing('lg');
+    justify-content: center;
+  }
+
+  &__prev-btn,
+  &__next-btn {
+    @include button-base;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: $color-navy;
+    color: white;
+    border: 2px solid $color-navy;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: all $transition-base;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: $color-navy;
+      box-shadow: $shadow-lg;
     }
 
-    &:active:not(:disabled) {
-      transform: scale(0.95);
+    &:focus-visible {
+      outline: 2px solid $color-teal;
+      outline-offset: 4px;
     }
 
     &:disabled {
-      opacity: 0.4;
+      opacity: 0.5;
       cursor: not-allowed;
     }
-
-    &--prev {
-      svg {
-        transform: scaleY(-1);
-      }
-    }
-
-    @include respond-to('sm') {
-      width: 36px;
-      height: 36px;
-
-      svg {
-        width: 12px;
-        height: 22px;
-      }
-    }
   }
 
-  // Responsive adjustments
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
+  &__arrow {
+    font-size: $font-size-lg;
+    font-weight: bold;
+    color: white;
+  }
+
+  &__page-indicator {
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /**
+   * Empty State
+   */
+  &__empty {
+    text-align: center;
+    padding: spacing('4xl') spacing('2xl');
+    background: lighten($color-sand, 5%);
+    border-radius: $border-radius-lg;
+
+    p {
+      margin: 0;
+      color: $color-text-primary;
+      font-size: $font-size-base;
     }
   }
+}
 
-  // Loading state
-  &.is-loading {
-    opacity: 0.6;
-    pointer-events: none;
+/**
+ * Animations
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
 
-  // Empty state
-  &.is-empty {
-    min-height: 300px;
-    @include flex-center;
-    color: $color-text-muted;
-    font-style: italic;
+/**
+ * Accessibility
+ */
+@media (prefers-reduced-motion: reduce) {
+  .multimedia {
+    &__gallery-img,
+    &__play-btn,
+    &__tab-button,
+    &__prev-btn,
+    &__next-btn {
+      transition: none !important;
+      animation: none !important;
+    }
   }
 }

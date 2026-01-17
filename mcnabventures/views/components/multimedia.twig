@@ -1,0 +1,120 @@
+{# Multimedia Component - Photo & Video Gallery with Tabs #}
+{# Data:
+  - title: string
+  - tabs: [{ name: string, gallery_type: 'gallery'|'videos', gallery?: [], videos?: [] }]
+  - items_per_page: number (default: 4)
+#}
+
+<section class="multimedia" data-multimedia>
+  <div class="multimedia__inner">
+    {% if title %}
+      <h2 class="multimedia__title">{{ title }}</h2>
+    {% endif %}
+
+    {% set tab_list = tabs ?? [] %}
+
+    {% if tab_list|length > 0 %}
+      {# Tab Navigation #}
+      <div class="multimedia__tabs" role="tablist" aria-label="Multimedia content tabs">
+        {% for tab in tab_list %}
+          <button
+            class="multimedia__tab-button {% if loop.first %}is-active{% endif %}"
+            type="button"
+            data-tab-index="{{ loop.index0 }}"
+            aria-selected="{{ loop.first ? 'true' : 'false' }}"
+          >
+            {{ tab.name }}
+          </button>
+        {% endfor %}
+      </div>
+
+      {# Tab Content Panels #}
+      <div class="multimedia__galleries">
+        {% for tab in tab_list %}
+          {% if tab.gallery_type == 'gallery' and tab.gallery %}
+            {# Photo Gallery #}
+            <div class="multimedia__gallery {% if loop.first %}is-active{% endif %}" data-gallery="{{ loop.index0 }}">
+              {% for image in tab.gallery %}
+                {% set img_url = image.url ?? image %}
+                {% set img_alt = image.alt ?? 'Gallery image' %}
+
+                <div class="multimedia__item">
+                  <img
+                    src="{{ img_url }}"
+                    alt="{{ img_alt|e }}"
+                    class="multimedia__media"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                  <button
+                    class="multimedia__play-btn"
+                    type="button"
+                    aria-label="View image"
+                  >
+                    <svg class="multimedia__play-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 3v18l15-9L5 3z" fill="currentColor" />
+                    </svg>
+                  </button>
+                </div>
+              {% endfor %}
+            </div>
+
+          {% elseif tab.gallery_type == 'videos' and tab.videos %}
+            {# Video Gallery #}
+            <div class="multimedia__gallery {% if loop.first %}is-active{% endif %}" data-gallery="{{ loop.index0 }}">
+              {% for video in tab.videos %}
+                {% set v_url = video.video_url ?? '' %}
+                {% set v_title = video.video_title ?? 'Video' %}
+
+                {% if v_url %}
+                  <div class="multimedia__item">
+                    <video
+                      class="multimedia__media"
+                      controls
+                      preload="metadata"
+                    >
+                      <source src="{{ v_url }}" type="video/mp4">
+                      Tu navegador no soporta videos HTML5.
+                    </video>
+                    {% if v_title %}
+                      <p class="multimedia__video-title">{{ v_title }}</p>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+          {% else %}
+            <div class="multimedia__gallery {% if loop.first %}is-active{% endif %}" data-gallery="{{ loop.index0 }}">
+              <div class="multimedia__gallery-empty">
+                <p>No content available for this tab.</p>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {# Controls: Pagination + Navigation #}
+      <div class="multimedia__controls">
+        <div class="multimedia__pagination" data-pagination></div>
+        <div class="multimedia__navigation">
+          <button class="multimedia__nav-btn multimedia__nav-btn--prev" type="button" data-nav="prev" aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button class="multimedia__nav-btn multimedia__nav-btn--next" type="button" data-nav="next" aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    {% else %}
+      <div class="multimedia__gallery-empty">
+        <p>No multimedia content configured.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
