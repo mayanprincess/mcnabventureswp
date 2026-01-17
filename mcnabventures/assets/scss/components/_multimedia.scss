@@ -12,7 +12,7 @@
 
   &__inner {
     width: 100%;
-    max-width: $container-lg;
+    max-width: $container-2xl; // Más ancho en desktop
     margin: 0 auto;
     padding-left: $spacing-2xl;
     padding-right: $spacing-2xl;
@@ -32,13 +32,17 @@
    * Header: Title + Tabs
    */
   &__header {
-    @include flex-between;
-    align-items: center;
-    margin-bottom: $spacing-3xl;
-    gap: $spacing-xl;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: $spacing-xl;
+    gap: $spacing-md;
 
     @include breakpoint-up('md') {
+      flex-direction: row;
+      justify-content: space-between;
       align-items: flex-start;
+      margin-bottom: $spacing-3xl;
       gap: $spacing-2xl;
     }
   }
@@ -69,12 +73,13 @@
     background: $color-sand;
     padding: 3.5px;
     border-radius: 18px;
-    width: auto;
-    min-width: 280px;
+    width: 100%;
+    max-width: 280px;
     flex-shrink: 0;
 
     @include breakpoint-up('md') {
-      min-width: 320px;
+      width: auto;
+      max-width: 320px;
     }
   }
 
@@ -117,45 +122,30 @@
   }
 
   /**
-   * Content Panels
+   * Content Panels - Default Hidden
    */
   &__gallery,
   &__videos,
   &__empty {
-    display: none;
+    display: none !important;
 
     &.is-active {
-      display: grid;
+      display: grid !important;
     }
   }
 
   /**
-   * Photo Gallery - Mobile: Slider / Desktop: Masonry
+   * Photo Gallery - Mobile: 2 Column Grid / Desktop: Masonry
    */
   &__gallery {
-    // Mobile: Horizontal slider with snap scroll
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+    // Mobile: 2 column grid
+    grid-template-columns: repeat(2, 1fr);
     gap: $spacing-sm;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; // Firefox
     margin-bottom: $spacing-2xl;
 
-    &::-webkit-scrollbar {
-      display: none; // Chrome, Safari
-    }
-
-    // Tablet: 2 column grid
+    // Tablet: Keep 2 columns, increase gap
     @include breakpoint-up('md') {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: auto;
       gap: $spacing-md;
-      overflow: visible;
-      height: auto;
     }
 
     // Desktop: 4 column masonry grid
@@ -175,62 +165,45 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
 
-    // Mobile: Slider items (80% width, scroll snap)
-    width: 80%;
-    aspect-ratio: 3 / 4;
-    scroll-snap-align: center;
-
-    // Tablet: Regular grid items
-    @include breakpoint-up('md') {
-      width: auto;
-      aspect-ratio: auto;
-      scroll-snap-align: unset;
-      grid-column: span 1;
-      grid-row: span 1;
+    // Mobile: First item spans 2 columns and is taller
+    &--0 {
+      grid-column: span 2;
+      aspect-ratio: 16 / 9;
     }
 
-    // Desktop: Masonry layout patterns (repeats every 8 items)
+    // Tablet: Same as mobile
+    @include breakpoint-up('md') {
+      &--0 {
+        grid-column: span 2;
+        aspect-ratio: 16 / 9;
+      }
+    }
+
+    // Desktop: 4 column masonry layout patterns (repeats every 8 items)
     @include breakpoint-up('lg') {
       &--0 {
         grid-column: span 2;
         grid-row: span 2;
+        aspect-ratio: auto;
       }
 
-      &--1 {
+      &--1,
+      &--2,
+      &--4,
+      &--5,
+      &--6,
+      &--7 {
         grid-column: span 1;
         grid-row: span 1;
-      }
-
-      &--2 {
-        grid-column: span 1;
-        grid-row: span 1;
+        aspect-ratio: auto;
       }
 
       &--3 {
         grid-column: span 2;
         grid-row: span 1;
-      }
-
-      &--4 {
-        grid-column: span 1;
-        grid-row: span 1;
-      }
-
-      &--5 {
-        grid-column: span 1;
-        grid-row: span 1;
-      }
-
-      &--6 {
-        grid-column: span 1;
-        grid-row: span 1;
-      }
-
-      &--7 {
-        grid-column: span 1;
-        grid-row: span 1;
+        aspect-ratio: auto;
       }
     }
   }
@@ -251,14 +224,17 @@
    * Video Gallery - Simple Grid
    */
   &__videos {
+    // Mobile: 1 column grid
     grid-template-columns: 1fr;
     gap: $spacing-lg;
     margin-bottom: $spacing-2xl;
 
+    // Tablet: 2 columns
     @include breakpoint-up('md') {
       grid-template-columns: repeat(2, 1fr);
     }
 
+    // Desktop: 3 columns
     @include breakpoint-up('lg') {
       grid-template-columns: repeat(3, 1fr);
     }
@@ -297,9 +273,8 @@
    * Empty State
    */
   &__empty {
-    grid-column: 1 / -1;
+    place-items: center;
     min-height: 300px;
-    @include flex-center;
     background: color.adjust($color-sand, $lightness: 5%);
     border-radius: $border-radius-lg;
     padding: $spacing-2xl;
@@ -308,6 +283,7 @@
       margin: 0;
       color: $color-text-primary;
       font-size: $font-size-base;
+      text-align: center;
     }
   }
 }
