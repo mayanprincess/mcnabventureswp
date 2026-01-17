@@ -10,7 +10,9 @@
   padding: spacing('3xl') 0;
 
   &__inner {
-    @include container;
+    width: 100%;
+    max-width: $container-lg;
+    margin: 0 auto;
     padding-left: spacing('2xl');
     padding-right: spacing('2xl');
 
