@@ -7,23 +7,23 @@
 @use '../abstracts/mixins' as *;
 
 .multimedia {
-  padding: spacing('3xl') 0;
+  padding: $spacing-3xl 0;
 
   &__inner {
     width: 100%;
     max-width: $container-lg;
     margin: 0 auto;
-    padding-left: spacing('2xl');
-    padding-right: spacing('2xl');
+    padding-left: $spacing-2xl;
+    padding-right: $spacing-2xl;
 
     @include breakpoint-up('md') {
-      padding-left: spacing('3xl');
-      padding-right: spacing('3xl');
+      padding-left: $spacing-3xl;
+      padding-right: $spacing-3xl;
     }
 
     @include breakpoint-up('lg') {
-      padding-left: spacing('4xl');
-      padding-right: spacing('4xl');
+      padding-left: $spacing-4xl;
+      padding-right: $spacing-4xl;
     }
   }
 
@@ -33,12 +33,12 @@
   &__header {
     @include flex-between;
     align-items: center;
-    margin-bottom: spacing('3xl');
-    gap: spacing('xl');
+    margin-bottom: $spacing-3xl;
+    gap: $spacing-xl;
 
     @include breakpoint-up('md') {
       align-items: flex-start;
-      gap: spacing('2xl');
+      gap: $spacing-2xl;
     }
   }
 
@@ -79,7 +79,7 @@
 
   &__tab {
     @include button-base;
-    padding: spacing('sm') spacing('lg');
+    padding: $spacing-sm $spacing-lg;
     font-size: $font-size-sm;
     font-family: $font-body;
     font-weight: 800; // ExtraBold
@@ -96,7 +96,7 @@
     justify-content: center;
 
     @include breakpoint-up('md') {
-      padding: spacing('md') spacing('xl');
+      padding: $spacing-md $spacing-xl;
       font-size: $font-size-base;
     }
 
@@ -134,26 +134,26 @@
   &__gallery {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: spacing('md');
+    gap: $spacing-md;
     height: 648px;
-    margin-bottom: spacing('2xl');
+    margin-bottom: $spacing-2xl;
 
     @include breakpoint-up('md') {
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
       height: 500px;
-      gap: spacing('sm');
+      gap: $spacing-sm;
     }
 
     @include breakpoint-up('lg') {
       grid-template-columns: repeat(2, 1fr);
-      gap: spacing('sm');
+      gap: $spacing-sm;
       height: auto;
     }
 
     @include breakpoint-up('sm') {
       grid-template-columns: 1fr;
-      gap: spacing('sm');
+      gap: $spacing-sm;
       height: auto;
     }
   }
@@ -255,8 +255,8 @@
    */
   &__videos {
     grid-template-columns: 1fr;
-    gap: spacing('lg');
-    margin-bottom: spacing('2xl');
+    gap: $spacing-lg;
+    margin-bottom: $spacing-2xl;
 
     @include breakpoint-up('md') {
       grid-template-columns: repeat(2, 1fr);
@@ -270,7 +270,7 @@
   &__video-item {
     display: flex;
     flex-direction: column;
-    gap: spacing('md');
+    gap: $spacing-md;
   }
 
   &__video-container {
@@ -305,7 +305,7 @@
     @include flex-center;
     background: lighten($color-sand, 5%);
     border-radius: $border-radius-lg;
-    padding: spacing('2xl');
+    padding: $spacing-2xl;
 
     p {
       margin: 0;
