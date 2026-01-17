@@ -287,57 +287,26 @@ add_filter('the_content', function($content) {
   
   $components = mcnab_get_registered_components();
   $all_components_html = '';
-  
-  /**
-   * Normalize ACF values recursively (supports repeater rows + image arrays)
-   */
-  $normalize_value = function($value) use (&$normalize_value) {
-    if (is_array($value)) {
-      // ACF image array
-      if (isset($value['url']) && is_string($value['url'])) {
-        return $value; // keep full array (url/alt/id/etc)
-      }
-
-      // ACF image with ID only
-      if (isset($value['ID']) && is_numeric($value['ID'])) {
-        $id = (int) $value['ID'];
-        $url = wp_get_attachment_image_url($id, 'full') ?: '';
-        $alt = get_post_meta($id, '_wp_attachment_image_alt', true) ?: '';
-        $value['url'] = $url;
-        $value['alt'] = $value['alt'] ?? $alt;
-        return $value;
-      }
-
-      // Repeater rows / nested arrays
-      foreach ($value as $k => $v) {
-        $value[$k] = $normalize_value($v);
-      }
-      return $value;
-    }
-
-    // Attachment ID provided as number (rare in our setup)
-    return $value;
-  };
 
   // Render each component in order
   foreach ($page_components as $component_data) {
     $layout = $component_data['acf_fc_layout'] ?? '';
-    
+
     if (empty($layout) || !isset($components[$layout])) {
       continue;
     }
-    
-    // Prepare component data (remove ACF internal fields)
+
+    // Prepare component data (remove ACF internal fields, normalization happens in mcnab_render_twig_component)
     $args = [];
     foreach ($component_data as $key => $value) {
       if ($key === 'acf_fc_layout') {
         continue;
       }
 
-      $args[$key] = $normalize_value($value);
+      $args[$key] = $value;
     }
-    
-    // Render component with data
+
+    // Render component with data (normalization handled inside)
     ob_start();
     mcnab_render_twig_component($layout, $args);
     $component_html = ob_get_clean();
