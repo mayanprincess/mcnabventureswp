@@ -48,6 +48,42 @@ function mcnab_get_attachment_image_url($image_id, $size = 'full') {
 }
 
 /**
+ * Normalize ACF values recursively
+ * Handles images, galleries, repeaters, and nested structures
+ */
+function mcnab_normalize_acf_values($value) {
+  if (is_array($value)) {
+    // Check if this is an image array (has 'url' key)
+    if (isset($value['url']) && is_string($value['url'])) {
+      return $value; // Keep full image array for Twig to access properties
+    }
+
+    // Check if this is an image ID array (has 'ID' key)
+    if (isset($value['ID']) && is_numeric($value['ID'])) {
+      $id = (int) $value['ID'];
+      $url = mcnab_get_attachment_image_url($id, 'full');
+      $value['url'] = $url;
+      $value['alt'] = $value['alt'] ?? get_post_meta($id, '_wp_attachment_image_alt', true) ?: '';
+      return $value;
+    }
+
+    // Recursively normalize nested arrays (galleries, repeaters)
+    $normalized = [];
+    foreach ($value as $k => $v) {
+      $normalized[$k] = mcnab_normalize_acf_values($v);
+    }
+    return $normalized;
+  }
+
+  // Single image ID as number
+  if (is_numeric($value)) {
+    return mcnab_get_attachment_image_url((int) $value, 'full');
+  }
+
+  return $value;
+}
+
+/**
  * Render a component using Twig
  *
  * @param string $component_name Component name (file name without .twig)
@@ -55,20 +91,11 @@ function mcnab_get_attachment_image_url($image_id, $size = 'full') {
  * @return void
  */
 function mcnab_render_twig_component($component_name, $args = []) {
-  $context = $args;
+  $context = [];
 
-  // Handle ACF image arrays - convert to URL strings
-  foreach ($context as $key => $value) {
-    if (is_array($value) && isset($value['url'])) {
-      // ACF image array
-      $context[$key] = $value['url'];
-    } elseif (is_array($value) && isset($value['ID'])) {
-      // ACF image with ID only, get URL
-      $context[$key] = mcnab_get_attachment_image_url($value['ID'], 'full');
-    } elseif (is_numeric($value) && ($key === 'logo' || $key === 'background_image' || strpos($key, 'image') !== false)) {
-      // Image ID as number
-      $context[$key] = mcnab_get_attachment_image_url($value, 'full');
-    }
+  // Normalize all values recursively
+  foreach ($args as $key => $value) {
+    $context[$key] = mcnab_normalize_acf_values($value);
   }
 
   $template = 'components/' . sanitize_file_name($component_name) . '.twig';

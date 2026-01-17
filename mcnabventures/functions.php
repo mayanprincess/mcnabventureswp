@@ -95,6 +95,15 @@ add_action('wp_enqueue_scripts', function () {
     '0.1.0',
     true
   );
+
+  // Multimedia Component Script
+  wp_enqueue_script(
+    'mcnabventures-multimedia',
+    get_template_directory_uri() . '/assets/js/multimedia.js',
+    [],
+    '0.1.0',
+    true
+  );
 });
 
 /**
