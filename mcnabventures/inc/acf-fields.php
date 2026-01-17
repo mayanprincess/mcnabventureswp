@@ -52,17 +52,34 @@ add_action('acf/init', function() {
         $acf_field['preview_size'] = 'medium';
         $acf_field['library'] = 'all';
       }
-      
+
+      if ($field_config['type'] === 'gallery') {
+        $acf_field['return_format'] = 'array';
+        $acf_field['preview_size'] = 'medium';
+        $acf_field['library'] = 'all';
+        $acf_field['min_height'] = '';
+        $acf_field['min_width'] = '';
+        $acf_field['min_size'] = '';
+        $acf_field['max_size'] = '';
+        $acf_field['mime_types'] = '';
+        $acf_field['insert'] = 'append';
+      }
+
       if ($field_config['type'] === 'textarea') {
         $acf_field['rows'] = 4;
       }
-      
+
       if ($field_config['type'] === 'wysiwyg') {
         $acf_field['tabs'] = 'all';
         $acf_field['toolbar'] = 'full';
         $acf_field['media_upload'] = 1;
       }
-      
+
+      // Add conditional logic if present
+      if (isset($field_config['conditional_logic'])) {
+        $acf_field['conditional_logic'] = $field_config['conditional_logic'];
+      }
+
       if ($field_config['type'] === 'repeater') {
         $acf_field['layout'] = 'block';
         $acf_field['button_label'] = 'Add Item';
@@ -74,25 +91,93 @@ add_action('acf/init', function() {
           $acf_field['sub_fields'] = [];
           foreach ($field_config['sub_fields'] as $sub_key => $sub_field) {
             $sub_stable_key = 'field_' . substr(md5('mcnab_flex_' . $slug . '_' . $field_key . '_' . $sub_key), 0, 13);
-            
+
             $sub_acf_field = [
               'key' => $sub_stable_key,
-              'label' => $sub_field['label'],
+              'label' => $sub_field['label'] ?? ucfirst(str_replace('_', ' ', $sub_key)),
               'name' => $sub_key,
               'type' => mcnab_convert_field_type($sub_field['type']),
               'required' => $sub_field['required'] ?? false,
             ];
-            
+
+            // Handle choices for select fields
+            if ($sub_field['type'] === 'select' && isset($sub_field['choices'])) {
+              $sub_acf_field['choices'] = $sub_field['choices'];
+              if (isset($sub_field['default'])) {
+                $sub_acf_field['default_value'] = $sub_field['default'];
+              }
+            }
+
+            // Handle default values
+            if (isset($sub_field['default']) && $sub_field['type'] !== 'select') {
+              $sub_acf_field['default_value'] = $sub_field['default'];
+            }
+
+            // Handle placeholder
+            if (isset($sub_field['placeholder'])) {
+              $sub_acf_field['placeholder'] = $sub_field['placeholder'];
+            }
+
             if ($sub_field['type'] === 'wysiwyg') {
               $sub_acf_field['tabs'] = 'all';
               $sub_acf_field['toolbar'] = 'full';
               $sub_acf_field['media_upload'] = 1;
             }
-            
+
             if ($sub_field['type'] === 'textarea') {
               $sub_acf_field['rows'] = 4;
             }
-            
+
+            if ($sub_field['type'] === 'gallery') {
+              $sub_acf_field['return_format'] = 'array';
+              $sub_acf_field['preview_size'] = 'medium';
+              $sub_acf_field['library'] = 'all';
+              $sub_acf_field['min_height'] = '';
+              $sub_acf_field['min_width'] = '';
+              $sub_acf_field['min_size'] = '';
+              $sub_acf_field['max_size'] = '';
+              $sub_acf_field['mime_types'] = '';
+              $sub_acf_field['insert'] = 'append';
+            }
+
+            // Add conditional logic if present in sub field
+            if (isset($sub_field['conditional_logic'])) {
+              $sub_acf_field['conditional_logic'] = $sub_field['conditional_logic'];
+            }
+
+            // Handle nested repeater
+            if ($sub_field['type'] === 'repeater' && isset($sub_field['sub_fields'])) {
+              $sub_acf_field['layout'] = 'block';
+              $sub_acf_field['button_label'] = 'Add Item';
+              $sub_acf_field['min'] = 0;
+              $sub_acf_field['max'] = 0;
+              $sub_acf_field['sub_fields'] = [];
+
+              foreach ($sub_field['sub_fields'] as $nested_key => $nested_field) {
+                $nested_stable_key = 'field_' . substr(md5('mcnab_flex_' . $slug . '_' . $field_key . '_' . $sub_key . '_' . $nested_key), 0, 13);
+
+                $nested_acf_field = [
+                  'key' => $nested_stable_key,
+                  'label' => $nested_field['label'] ?? ucfirst(str_replace('_', ' ', $nested_key)),
+                  'name' => $nested_key,
+                  'type' => mcnab_convert_field_type($nested_field['type']),
+                  'required' => $nested_field['required'] ?? false,
+                ];
+
+                if (isset($nested_field['placeholder'])) {
+                  $nested_acf_field['placeholder'] = $nested_field['placeholder'];
+                }
+
+                if ($nested_field['type'] === 'wysiwyg') {
+                  $nested_acf_field['tabs'] = 'all';
+                  $nested_acf_field['toolbar'] = 'full';
+                  $nested_acf_field['media_upload'] = 1;
+                }
+
+                $sub_acf_field['sub_fields'][] = $nested_acf_field;
+              }
+            }
+
             $acf_field['sub_fields'][] = $sub_acf_field;
           }
         }
@@ -159,11 +244,14 @@ function mcnab_convert_field_type($type) {
     'text' => 'text',
     'textarea' => 'textarea',
     'image' => 'image',
+    'gallery' => 'gallery',
     'url' => 'url',
+    'select' => 'select',
     'repeater' => 'repeater',
     'wysiwyg' => 'wysiwyg',
+    'number' => 'number',
   ];
-  
+
   return $mapping[$type] ?? 'text';
 }
 
