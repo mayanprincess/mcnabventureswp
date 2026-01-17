@@ -5,6 +5,7 @@
 
 @use '../abstracts/variables' as *;
 @use '../abstracts/mixins' as *;
+@use 'sass:color';
 
 .multimedia {
   padding: $spacing-3xl 0;
@@ -303,7 +304,7 @@
     grid-column: 1 / -1;
     min-height: 300px;
     @include flex-center;
-    background: lighten($color-sand, 5%);
+    background: color.adjust($color-sand, $lightness: 5%);
     border-radius: $border-radius-lg;
     padding: $spacing-2xl;
 
