@@ -46,6 +46,176 @@ add_action('after_setup_theme', function () {
 });
 
 /**
+ * Enable ACF fields in the REST API
+ */
+add_filter('acf/settings/rest_api', '__return_true');
+add_filter('acf/settings/rest_api_enabled', '__return_true');
+
+/**
+ * Allow SVG uploads
+ */
+add_filter('upload_mimes', function($mimes) {
+  $mimes['svg'] = 'image/svg+xml';
+  return $mimes;
+});
+
+/**
+ * Normalize component data with defaults for REST responses
+ */
+function mcnab_apply_field_defaults($field_config, $value) {
+  $type = $field_config['type'] ?? 'text';
+
+  if ($type === 'group') {
+    $value = is_array($value) ? $value : [];
+    $normalized = [];
+    foreach ($field_config['sub_fields'] ?? [] as $sub_key => $sub_field) {
+      $sub_value = array_key_exists($sub_key, $value) ? $value[$sub_key] : null;
+      $normalized[$sub_key] = mcnab_apply_field_defaults($sub_field, $sub_value);
+    }
+    return $normalized;
+  }
+
+  if ($type === 'repeater') {
+    $rows = is_array($value) ? $value : ($field_config['default'] ?? []);
+    $normalized_rows = [];
+    foreach ($rows as $row) {
+      $row = is_array($row) ? $row : [];
+      $normalized_row = [];
+      foreach ($field_config['sub_fields'] ?? [] as $sub_key => $sub_field) {
+        $sub_value = array_key_exists($sub_key, $row) ? $row[$sub_key] : null;
+        $normalized_row[$sub_key] = mcnab_apply_field_defaults($sub_field, $sub_value);
+      }
+      $normalized_rows[] = $normalized_row;
+    }
+    return $normalized_rows;
+  }
+
+  if ($value === null && isset($field_config['default'])) {
+    return $field_config['default'];
+  }
+
+  return $value;
+}
+
+function mcnab_normalize_component_item($layout, $data, $registry) {
+  $component = $registry[$layout] ?? null;
+  if (!$component) {
+    return $data;
+  }
+
+  $normalized = [
+    'acf_fc_layout' => $layout,
+  ];
+
+  foreach ($component['fields'] as $field_key => $field_config) {
+    $value = array_key_exists($field_key, $data) ? $data[$field_key] : null;
+    $normalized[$field_key] = mcnab_apply_field_defaults($field_config, $value);
+  }
+
+  return $normalized;
+}
+
+function mcnab_get_page_components_normalized($page_id) {
+  if (!function_exists('get_field') || !function_exists('mcnab_get_registered_components')) {
+    return [];
+  }
+
+  $version = (int) get_option('mcnab_components_version', 1);
+  $cache_key = 'mcnab_page_components_api_' . $page_id . '_' . $version;
+  $cached = get_transient($cache_key);
+  if (false !== $cached) {
+    return $cached;
+  }
+
+  $components = mcnab_get_registered_components();
+  $page_components = get_field('page_components', $page_id);
+
+  if (empty($page_components) || !is_array($page_components)) {
+    set_transient($cache_key, [], 600);
+    return [];
+  }
+
+  $normalized = [];
+  foreach ($page_components as $component_data) {
+    $layout = $component_data['acf_fc_layout'] ?? '';
+    if (empty($layout) || !isset($components[$layout])) {
+      continue;
+    }
+    $normalized[] = mcnab_normalize_component_item($layout, $component_data, $components);
+  }
+
+  set_transient($cache_key, $normalized, 600);
+  return $normalized;
+}
+
+/**
+ * REST helper for components registry (optional filter by slug)
+ */
+add_action('rest_api_init', function() {
+  register_rest_route('mcnab/v1', '/components', [
+    'methods' => 'GET',
+    'callback' => function(\WP_REST_Request $request) {
+      if (!function_exists('mcnab_get_registered_components')) {
+        return new WP_REST_Response([], 200);
+      }
+
+      $components = mcnab_get_registered_components();
+      $slug = $request->get_param('slug');
+
+      if ($slug) {
+        $component = $components[$slug] ?? null;
+        return new WP_REST_Response($component ? [$slug => $component] : [], 200);
+      }
+
+      return new WP_REST_Response($components, 200);
+    },
+    'permission_callback' => '__return_true',
+  ]);
+
+  register_rest_route('mcnab/v1', '/page-components', [
+    'methods' => 'GET',
+    'callback' => function(\WP_REST_Request $request) {
+      $page_id = (int) $request->get_param('page_id');
+      $slug = $request->get_param('slug');
+
+      if (!$page_id && $slug) {
+        $page = get_page_by_path($slug, OBJECT, 'page');
+        $page_id = $page ? $page->ID : 0;
+      }
+
+      if (!$page_id) {
+        return new WP_REST_Response(['error' => 'page_id or slug is required'], 400);
+      }
+
+      return new WP_REST_Response(mcnab_get_page_components_normalized($page_id), 200);
+    },
+    'permission_callback' => '__return_true',
+  ]);
+});
+
+/**
+ * Optional: include normalized components directly in the page REST response
+ */
+add_filter('rest_prepare_page', function($response, $post, $request) {
+  if (!$request->get_param('include_components')) {
+    return $response;
+  }
+
+  $data = $response->get_data();
+  $data['page_components'] = mcnab_get_page_components_normalized($post->ID);
+  $response->set_data($data);
+  return $response;
+}, 10, 3);
+
+/**
+ * Invalidate REST cache when a page is updated
+ */
+add_action('save_post_page', function($post_id) {
+  delete_transient('mcnab_page_components_api_' . $post_id . '_' . get_option('mcnab_components_version', 1));
+  update_option('mcnab_components_version', time());
+});
+
+/**
  * Enqueue Google Fonts - Literata & Fustat
  * Cargadas una sola vez para frontend y editor, mejorando performance
  */

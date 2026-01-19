@@ -140,7 +140,7 @@ function mcnab_get_registered_components() {
       'slug' => 'multimedia',
       'location' => 'page',
       'name' => 'Multimedia Component',
-      'description' => 'Gallery with tabbed filtering (Photos/Videos), carousel pagination, and play buttons.',
+      'description' => 'Photo and video collections for a multimedia gallery.',
       'file' => 'multimedia.twig',
       'fields' => [
         'title' => [
@@ -149,74 +149,1083 @@ function mcnab_get_registered_components() {
           'default' => 'Multimedia',
           'required' => false,
         ],
-        'tabs' => [
-          'label' => 'Multimedia Tabs',
+        'photos' => [
+          'label' => 'Photos',
           'type' => 'repeater',
           'required' => false,
+          'default' => [],
           'sub_fields' => [
-            'name' => [
-              'label' => 'Tab Name',
+            'id' => [
+              'label' => 'Photo ID',
               'type' => 'text',
-              'placeholder' => 'e.g., Photos, Videos, Behind the Scenes',
+              'required' => false,
             ],
-            'gallery_type' => [
-              'label' => 'Gallery Type',
+            'src' => [
+              'label' => 'Photo',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'alt' => [
+              'label' => 'Alt Text',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'size' => [
+              'label' => 'Size',
               'type' => 'select',
               'choices' => [
-                'gallery' => 'Photo Gallery (Upload/Select images)',
-                'videos' => 'Video Gallery (Add video URLs)',
+                'large' => 'Large',
+                'tall' => 'Tall',
+                'medium' => 'Medium',
+                'small' => 'Small',
               ],
-              'default' => 'gallery',
-            ],
-            'gallery' => [
-              'label' => 'Photo Gallery',
-              'type' => 'gallery',
+              'default' => 'medium',
               'required' => false,
-              'conditional_logic' => [
-                [
-                  [
-                    'field' => 'gallery_type',
-                    'operator' => '==',
-                    'value' => 'gallery',
-                  ],
-                ],
-              ],
             ],
-            'videos' => [
-              'label' => 'Video Gallery',
+          ],
+        ],
+        'videos' => [
+          'label' => 'Videos',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Video ID',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'thumbnail' => [
+              'label' => 'Thumbnail',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'video_url' => [
+              'label' => 'Video URL',
+              'type' => 'url',
+              'placeholder' => 'https://example.com/video.mp4',
+              'required' => false,
+            ],
+            'alt' => [
+              'label' => 'Alt Text',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'size' => [
+              'label' => 'Size',
+              'type' => 'select',
+              'choices' => [
+                'large' => 'Large',
+                'tall' => 'Tall',
+                'medium' => 'Medium',
+                'small' => 'Small',
+              ],
+              'default' => 'medium',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'primary-hero' => [
+      'slug' => 'primary-hero',
+      'location' => 'page',
+      'name' => 'Primary Hero',
+      'description' => 'Primary hero with heading, MP4 background video, and two CTAs.',
+      'file' => 'primary-hero.twig',
+      'fields' => [
+        'heading' => [
+          'label' => 'Heading',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'video_src' => [
+          'label' => 'Video (MP4)',
+          'type' => 'file',
+          'mime_types' => 'mp4',
+          'required' => false,
+        ],
+        'primary_button' => [
+          'label' => 'Primary Button',
+          'type' => 'group',
+          'sub_fields' => [
+            'label' => [
+              'label' => 'Label',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'href' => [
+              'label' => 'URL',
+              'type' => 'url',
+              'required' => false,
+            ],
+          ],
+        ],
+        'secondary_button' => [
+          'label' => 'Secondary Button',
+          'type' => 'group',
+          'sub_fields' => [
+            'label' => [
+              'label' => 'Label',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'href' => [
+              'label' => 'URL',
+              'type' => 'url',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'secondary-hero' => [
+      'slug' => 'secondary-hero',
+      'location' => 'page',
+      'name' => 'Secondary Hero',
+      'description' => 'Hero with background image and optional vector design.',
+      'file' => 'secondary-hero.twig',
+      'fields' => [
+        'image' => [
+          'label' => 'Image',
+          'type' => 'image',
+          'required' => false,
+        ],
+        'heading' => [
+          'label' => 'Heading',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'linkLabel' => [
+          'label' => 'Link Label',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'linkUrl' => [
+          'label' => 'Link URL',
+          'type' => 'url',
+          'required' => false,
+        ],
+        'useVectorDesign' => [
+          'label' => 'Use Vector Design',
+          'type' => 'true_false',
+          'default' => 0,
+          'required' => false,
+        ],
+      ],
+    ],
+    'mission-statement' => [
+      'slug' => 'mission-statement',
+      'location' => 'page',
+      'name' => 'Mission Statement',
+      'description' => 'Single text with optional highlight phrases.',
+      'file' => 'mission-statement.twig',
+      'fields' => [
+        'text' => [
+          'label' => 'Text',
+          'type' => 'textarea',
+          'required' => false,
+        ],
+        'highlights' => [
+          'label' => 'Highlights',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'text' => [
+              'label' => 'Highlight',
+              'type' => 'text',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'video-player' => [
+      'slug' => 'video-player',
+      'location' => 'page',
+      'name' => 'Video Player',
+      'description' => 'Standalone video with poster image.',
+      'file' => 'video-player.twig',
+      'fields' => [
+        'video_src' => [
+          'label' => 'Video (MP4)',
+          'type' => 'file',
+          'mime_types' => 'mp4',
+          'required' => false,
+        ],
+        'poster_image' => [
+          'label' => 'Poster Image',
+          'type' => 'image',
+          'required' => false,
+        ],
+      ],
+    ],
+    'group-snapshot' => [
+      'slug' => 'group-snapshot',
+      'location' => 'page',
+      'name' => 'Group Snapshot',
+      'description' => 'Snapshot slides with highlights and company logos.',
+      'file' => 'group-snapshot.twig',
+      'fields' => [
+        'slides' => [
+          'label' => 'Slides',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Slide ID',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'main_image' => [
+              'label' => 'Main Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'circle_image' => [
+              'label' => 'Circle Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'badge' => [
+              'label' => 'Badge',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'title' => [
+              'label' => 'Title',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'description' => [
+              'label' => 'Description',
+              'type' => 'textarea',
+              'required' => false,
+            ],
+            'highlights' => [
+              'label' => 'Highlights',
               'type' => 'repeater',
               'required' => false,
-              'conditional_logic' => [
-                [
-                  [
-                    'field' => 'gallery_type',
-                    'operator' => '==',
-                    'value' => 'videos',
-                  ],
-                ],
-              ],
+              'default' => [],
               'sub_fields' => [
-                'video_url' => [
-                  'label' => 'Video URL',
-                  'type' => 'url',
-                  'placeholder' => 'https://yourdomain.com/videos/myvideo.mp4',
-                  'required' => true,
-                ],
-                'video_title' => [
-                  'label' => 'Video Title',
+                'text' => [
+                  'label' => 'Highlight',
                   'type' => 'text',
-                  'placeholder' => 'Video description/title',
                   'required' => false,
                 ],
               ],
             ],
           ],
         ],
-        'items_per_page' => [
-          'label' => 'Items Per Carousel Page',
-          'type' => 'number',
-          'default' => 4,
+        'company_logos' => [
+          'label' => 'Company Logos',
+          'type' => 'repeater',
           'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'name' => [
+              'label' => 'Name',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'logo' => [
+              'label' => 'Logo (SVG)',
+              'type' => 'file',
+              'mime_types' => 'svg',
+              'required' => false,
+            ],
+            'width' => [
+              'label' => 'Width',
+              'type' => 'number',
+              'required' => false,
+            ],
+            'height' => [
+              'label' => 'Height',
+              'type' => 'number',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'our-partners' => [
+      'slug' => 'our-partners',
+      'location' => 'page',
+      'name' => 'Our Partners',
+      'description' => 'Partner logos with badge and title.',
+      'file' => 'our-partners.twig',
+      'fields' => [
+        'badge' => [
+          'label' => 'Badge',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'partners' => [
+          'label' => 'Partners',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'name' => [
+              'label' => 'Name',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'logo' => [
+              'label' => 'Logo (SVG)',
+              'type' => 'file',
+              'mime_types' => 'svg',
+              'required' => false,
+            ],
+            'width' => [
+              'label' => 'Width',
+              'type' => 'number',
+              'required' => false,
+            ],
+            'height' => [
+              'label' => 'Height',
+              'type' => 'number',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'featured-experiences' => [
+      'slug' => 'featured-experiences',
+      'location' => 'page',
+      'name' => 'Featured Experiences',
+      'description' => 'Grid of mixed media tiles.',
+      'file' => 'featured-experiences.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'description' => [
+          'label' => 'Description',
+          'type' => 'textarea',
+          'required' => false,
+        ],
+        'grid_items' => [
+          'label' => 'Grid Items',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'type' => [
+              'label' => 'Item Type',
+              'type' => 'select',
+              'choices' => [
+                'image' => 'Image',
+                'text' => 'Text',
+                'icon' => 'Icon',
+              ],
+              'default' => 'image',
+              'required' => false,
+            ],
+            'image' => [
+              'label' => 'Image',
+              'type' => 'image',
+              'required' => false,
+              'conditional_logic' => [
+                [
+                  [
+                    'field' => 'type',
+                    'operator' => '==',
+                    'value' => 'image',
+                  ],
+                ],
+              ],
+            ],
+            'text' => [
+              'label' => 'Text',
+              'type' => 'text',
+              'required' => false,
+              'conditional_logic' => [
+                [
+                  [
+                    'field' => 'type',
+                    'operator' => '==',
+                    'value' => 'text',
+                  ],
+                ],
+              ],
+            ],
+            'icon' => [
+              'label' => 'Icon (SVG)',
+              'type' => 'file',
+              'mime_types' => 'svg',
+              'required' => false,
+              'conditional_logic' => [
+                [
+                  [
+                    'field' => 'type',
+                    'operator' => '==',
+                    'value' => 'icon',
+                  ],
+                ],
+              ],
+            ],
+            'background_color' => [
+              'label' => 'Background Color',
+              'type' => 'select',
+              'choices' => [
+                'navy' => 'Navy',
+                'gold' => 'Gold',
+                'turquoise' => 'Turquoise',
+                'sand' => 'Sand',
+              ],
+              'default' => 'navy',
+              'required' => false,
+            ],
+            'text_color' => [
+              'label' => 'Text Color',
+              'type' => 'select',
+              'choices' => [
+                'white' => 'White',
+                'navy' => 'Navy',
+              ],
+              'default' => 'white',
+              'required' => false,
+            ],
+            'grid_column' => [
+              'label' => 'Grid Column',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'grid_row' => [
+              'label' => 'Grid Row',
+              'type' => 'text',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'stay-in-the-loop' => [
+      'slug' => 'stay-in-the-loop',
+      'location' => 'page',
+      'name' => 'Stay In The Loop',
+      'description' => 'News or article teaser cards.',
+      'file' => 'stay-in-the-loop.twig',
+      'fields' => [
+        'section_title' => [
+          'label' => 'Section Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'view_all_url' => [
+          'label' => 'View All URL',
+          'type' => 'url',
+          'required' => false,
+        ],
+        'items' => [
+          'label' => 'Items',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Item ID',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'category' => [
+              'label' => 'Category',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'title' => [
+              'label' => 'Title',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'date' => [
+              'label' => 'Date',
+              'type' => 'date',
+              'required' => false,
+            ],
+            'image' => [
+              'label' => 'Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'href' => [
+              'label' => 'Link',
+              'type' => 'url',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'diversified' => [
+      'slug' => 'diversified',
+      'location' => 'page',
+      'name' => 'Diversified',
+      'description' => 'Image section with title.',
+      'file' => 'diversified.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'image' => [
+          'label' => 'Image',
+          'type' => 'image',
+          'required' => false,
+        ],
+      ],
+    ],
+    'join-our-team' => [
+      'slug' => 'join-our-team',
+      'location' => 'page',
+      'name' => 'Join Our Team',
+      'description' => 'Recruiting section with CTA and image.',
+      'file' => 'join-our-team.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'description' => [
+          'label' => 'Description',
+          'type' => 'textarea',
+          'required' => false,
+        ],
+        'button_text' => [
+          'label' => 'Button Text',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'button_href' => [
+          'label' => 'Button URL',
+          'type' => 'url',
+          'required' => false,
+        ],
+        'image' => [
+          'label' => 'Image',
+          'type' => 'image',
+          'required' => false,
+        ],
+      ],
+    ],
+    'who-we-are' => [
+      'slug' => 'who-we-are',
+      'location' => 'page',
+      'name' => 'Who We Are',
+      'description' => 'Badge + split title with highlight and description.',
+      'file' => 'who-we-are.twig',
+      'fields' => [
+        'badge' => [
+          'label' => 'Badge',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'title_part_1' => [
+          'label' => 'Title Part 1',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'title_highlight' => [
+          'label' => 'Title Highlight',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'description' => [
+          'label' => 'Description',
+          'type' => 'textarea',
+          'required' => false,
+        ],
+        'logo' => [
+          'label' => 'Logo',
+          'type' => 'image',
+          'required' => false,
+        ],
+      ],
+    ],
+    'our-journey' => [
+      'slug' => 'our-journey',
+      'location' => 'page',
+      'name' => 'Our Journey',
+      'description' => 'Accordion timeline of milestones.',
+      'file' => 'our-journey.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'default_open' => [
+          'label' => 'Default Open (ID or Title)',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'items' => [
+          'label' => 'Items',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Item ID',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'title' => [
+              'label' => 'Title',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'content' => [
+              'label' => 'Content',
+              'type' => 'textarea',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'get-highlights' => [
+      'slug' => 'get-highlights',
+      'location' => 'page',
+      'name' => 'Get Highlights',
+      'description' => 'Highlight cards with image, title, description, and link.',
+      'file' => 'get-highlights.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'items' => [
+          'label' => 'Items',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Item ID',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'image' => [
+              'label' => 'Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'title' => [
+              'label' => 'Title',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'description' => [
+              'label' => 'Description',
+              'type' => 'textarea',
+              'required' => false,
+            ],
+            'href' => [
+              'label' => 'Link',
+              'type' => 'url',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'our-industries' => [
+      'slug' => 'our-industries',
+      'location' => 'page',
+      'name' => 'Our Industries',
+      'description' => 'Industry cards with image and link.',
+      'file' => 'our-industries.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'items' => [
+          'label' => 'Items',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Item ID',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'title' => [
+              'label' => 'Title',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'image' => [
+              'label' => 'Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'description' => [
+              'label' => 'Description',
+              'type' => 'textarea',
+              'required' => false,
+            ],
+            'href' => [
+              'label' => 'Link',
+              'type' => 'url',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'contact-card' => [
+      'slug' => 'contact-card',
+      'location' => 'page',
+      'name' => 'Contact Card',
+      'description' => 'Contact card with social links.',
+      'file' => 'contact-card.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'contact_type' => [
+          'label' => 'Contact Type',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'name' => [
+          'label' => 'Name',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'position' => [
+          'label' => 'Position',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'email' => [
+          'label' => 'Email',
+          'type' => 'email',
+          'required' => false,
+        ],
+        'phone' => [
+          'label' => 'Phone',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'website' => [
+          'label' => 'Website',
+          'type' => 'url',
+          'required' => false,
+        ],
+        'address' => [
+          'label' => 'Address',
+          'type' => 'textarea',
+          'required' => false,
+        ],
+        'image' => [
+          'label' => 'Image',
+          'type' => 'image',
+          'required' => false,
+        ],
+        'social_links' => [
+          'label' => 'Social Links',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'name' => [
+              'label' => 'Name',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'icon' => [
+              'label' => 'Icon (SVG)',
+              'type' => 'file',
+              'mime_types' => 'svg',
+              'required' => false,
+            ],
+            'href' => [
+              'label' => 'URL',
+              'type' => 'url',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'useful-links' => [
+      'slug' => 'useful-links',
+      'location' => 'page',
+      'name' => 'Useful Links',
+      'description' => 'Icon links list.',
+      'file' => 'useful-links.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'links' => [
+          'label' => 'Links',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'label' => [
+              'label' => 'Label',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'href' => [
+              'label' => 'URL',
+              'type' => 'url',
+              'required' => false,
+            ],
+            'icon' => [
+              'label' => 'Icon (SVG)',
+              'type' => 'file',
+              'mime_types' => 'svg',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'driven-by-progress' => [
+      'slug' => 'driven-by-progress',
+      'location' => 'page',
+      'name' => 'Driven By Progress',
+      'description' => 'Stats with icon and supporting image.',
+      'file' => 'driven-by-progress.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'description' => [
+          'label' => 'Description',
+          'type' => 'textarea',
+          'required' => false,
+        ],
+        'image' => [
+          'label' => 'Image',
+          'type' => 'image',
+          'required' => false,
+        ],
+        'stats' => [
+          'label' => 'Stats',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'icon' => [
+              'label' => 'Icon (SVG)',
+              'type' => 'file',
+              'mime_types' => 'svg',
+              'required' => false,
+            ],
+            'value' => [
+              'label' => 'Value',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'label' => [
+              'label' => 'Label',
+              'type' => 'text',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'experiences-gallery' => [
+      'slug' => 'experiences-gallery',
+      'location' => 'page',
+      'name' => 'Experiences Gallery',
+      'description' => 'Gallery slides with split text.',
+      'file' => 'experiences-gallery.twig',
+      'fields' => [
+        'slides' => [
+          'label' => 'Slides',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Slide ID',
+              'type' => 'number',
+              'required' => false,
+            ],
+            'backgroundImage' => [
+              'label' => 'Background Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'leftText' => [
+              'label' => 'Left Text',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'rightText' => [
+              'label' => 'Right Text',
+              'type' => 'text',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'sustainability-in-action' => [
+      'slug' => 'sustainability-in-action',
+      'location' => 'page',
+      'name' => 'Sustainability In Action',
+      'description' => 'Card grid with background image.',
+      'file' => 'sustainability-in-action.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'backgroundImage' => [
+          'label' => 'Background Image',
+          'type' => 'image',
+          'required' => false,
+        ],
+        'cards' => [
+          'label' => 'Cards',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Card ID',
+              'type' => 'number',
+              'required' => false,
+            ],
+            'title' => [
+              'label' => 'Title',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'image' => [
+              'label' => 'Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'href' => [
+              'label' => 'Link',
+              'type' => 'url',
+              'required' => false,
+            ],
+          ],
+        ],
+      ],
+    ],
+    'the-experiences' => [
+      'slug' => 'the-experiences',
+      'location' => 'page',
+      'name' => 'The Experiences',
+      'description' => 'Experience layouts with single or dual image formats.',
+      'file' => 'the-experiences.twig',
+      'fields' => [
+        'title' => [
+          'label' => 'Title',
+          'type' => 'text',
+          'required' => false,
+        ],
+        'items' => [
+          'label' => 'Items',
+          'type' => 'repeater',
+          'required' => false,
+          'default' => [],
+          'sub_fields' => [
+            'id' => [
+              'label' => 'Item ID',
+              'type' => 'number',
+              'required' => false,
+            ],
+            'layout' => [
+              'label' => 'Layout',
+              'type' => 'select',
+              'choices' => [
+                'single' => 'Single',
+                'two-images' => 'Two Images',
+              ],
+              'default' => 'single',
+              'required' => false,
+            ],
+            'mainImage' => [
+              'label' => 'Main Image',
+              'type' => 'image',
+              'required' => false,
+            ],
+            'secondaryImage' => [
+              'label' => 'Secondary Image',
+              'type' => 'image',
+              'required' => false,
+              'conditional_logic' => [
+                [
+                  [
+                    'field' => 'layout',
+                    'operator' => '==',
+                    'value' => 'two-images',
+                  ],
+                ],
+              ],
+            ],
+            'circularImage' => [
+              'label' => 'Circular Image',
+              'type' => 'image',
+              'required' => false,
+              'conditional_logic' => [
+                [
+                  [
+                    'field' => 'layout',
+                    'operator' => '==',
+                    'value' => 'two-images',
+                  ],
+                ],
+              ],
+            ],
+            'title' => [
+              'label' => 'Title',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'description' => [
+              'label' => 'Description',
+              'type' => 'textarea',
+              'required' => false,
+            ],
+            'buttonText' => [
+              'label' => 'Button Text',
+              'type' => 'text',
+              'required' => false,
+            ],
+            'buttonHref' => [
+              'label' => 'Button URL',
+              'type' => 'url',
+              'required' => false,
+            ],
+          ],
         ],
       ],
     ],
