@@ -163,7 +163,6 @@ function mcnab_get_registered_components() {
             'src' => [
               'label' => 'Photo',
               'type' => 'image',
-              'return_format' => 'url',
               'required' => false,
             ],
             'alt' => [
@@ -199,7 +198,6 @@ function mcnab_get_registered_components() {
             'thumbnail' => [
               'label' => 'Thumbnail',
               'type' => 'image',
-              'return_format' => 'url',
               'required' => false,
             ],
             'video_url' => [
