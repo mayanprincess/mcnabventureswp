@@ -326,19 +326,6 @@ function mcnab_get_registered_components() {
           'type' => 'textarea',
           'required' => false,
         ],
-        'highlights' => [
-          'label' => 'Highlights',
-          'type' => 'repeater',
-          'required' => false,
-          'default' => [],
-          'sub_fields' => [
-            'text' => [
-              'label' => 'Highlight',
-              'type' => 'text',
-              'required' => false,
-            ],
-          ],
-        ],
       ],
     ],
     'video-player' => [
@@ -401,21 +388,8 @@ function mcnab_get_registered_components() {
             ],
             'description' => [
               'label' => 'Description',
-              'type' => 'textarea',
+              'type' => 'wysiwyg',
               'required' => false,
-            ],
-            'highlights' => [
-              'label' => 'Highlights',
-              'type' => 'repeater',
-              'required' => false,
-              'default' => [],
-              'sub_fields' => [
-                'text' => [
-                  'label' => 'Highlight',
-                  'type' => 'text',
-                  'required' => false,
-                ],
-              ],
             ],
           ],
         ],
