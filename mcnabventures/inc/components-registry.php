@@ -326,6 +326,11 @@ function mcnab_get_registered_components() {
           'type' => 'textarea',
           'required' => false,
         ],
+        'vectorType' => [
+          'label' => 'Vector Type',
+          'type' => 'text',
+          'required' => false,
+        ],
       ],
     ],
     'video-player' => [
