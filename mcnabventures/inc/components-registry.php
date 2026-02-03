@@ -735,7 +735,7 @@ function mcnab_get_registered_components() {
         ],
         'title_part_1' => [
           'label' => 'Title Part 1',
-          'type' => 'wysiwyg',
+          'type' => 'text',
           'required' => false,
         ],
         'description' => [
