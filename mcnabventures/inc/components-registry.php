@@ -738,11 +738,6 @@ function mcnab_get_registered_components() {
           'type' => 'wysiwyg',
           'required' => false,
         ],
-        'title_highlight' => [
-          'label' => 'Title Highlight',
-          'type' => 'text',
-          'required' => false,
-        ],
         'description' => [
           'label' => 'Description',
           'type' => 'textarea',
