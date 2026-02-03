@@ -90,6 +90,11 @@ function mcnab_apply_field_defaults($field_config, $value) {
     return $normalized_rows;
   }
 
+  // Resolve image ID to URL when field type is image (so API/output returns URL)
+  if ($type === 'image' && is_numeric($value) && (int) $value > 0) {
+    return wp_get_attachment_image_url((int) $value, 'full') ?: $value;
+  }
+
   if ($value === null && isset($field_config['default'])) {
     return $field_config['default'];
   }

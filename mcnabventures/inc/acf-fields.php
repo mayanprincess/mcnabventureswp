@@ -45,13 +45,13 @@ function mcnab_build_acf_field($slug, $field_key, $field_config, $parent_keys = 
   }
 
   if ($field_config['type'] === 'image') {
-    $acf_field['return_format'] = 'array';
+    $acf_field['return_format'] = $field_config['return_format'] ?? 'array';
     $acf_field['preview_size'] = 'medium';
     $acf_field['library'] = 'all';
   }
 
   if ($field_config['type'] === 'gallery') {
-    $acf_field['return_format'] = 'array';
+    $acf_field['return_format'] = $field_config['return_format'] ?? 'array';
     $acf_field['preview_size'] = 'medium';
     $acf_field['library'] = 'all';
     $acf_field['min_height'] = '';
