@@ -1,20 +1,18 @@
 {# Multimedia Component - Photo Gallery (Masonry) & Video Gallery (Grid) #}
 {# Data:
   - title: string
-  - photos: [{ src: url, alt?, size? }]  (src normalized to URL)
-  - videos: [{ video_url, video_title?, thumbnail? }]
-  - OR tabs: [{ name, gallery_type, gallery?, videos? }]
+  - tabs: [{ name: string, gallery_type: 'gallery'|'videos', gallery?: [], videos?: [] }]
 #}
 
 <section class="multimedia" data-multimedia>
   <div class="multimedia__inner">
+    {# Header: Title + Tabs #}
     <div class="multimedia__header">
       {% if title %}
         <h2 class="multimedia__title">{{ title }}</h2>
       {% endif %}
 
       {% set tab_list = tabs ?? [] %}
-      {% set use_photos = (photos is defined and photos|length > 0) and (tab_list|length == 0) %}
 
       {% if tab_list|length > 1 %}
         {# Tab Navigation (Pills style) #}
@@ -34,20 +32,11 @@
       {% endif %}
     </div>
 
-    {% if use_photos %}
-      <div class="multimedia__gallery is-active" data-gallery="0" role="tabpanel">
-        {% for image in photos %}
-          {% set img_url = image.src ?? '' %}
-          {% set img_alt = image.alt ?? 'Gallery image' %}
-          <div class="multimedia__masonry-item multimedia__masonry-item--{{ loop.index0 % 8 }}">
-            <img src="{{ img_url }}" alt="{{ img_alt|e }}" class="multimedia__image" loading="lazy" decoding="async">
-          </div>
-        {% endfor %}
-      </div>
-
-    {% elseif tab_list|length > 0 %}
+    {# Content Panels #}
+    {% if tab_list|length > 0 %}
       {% for tab in tab_list %}
         {% if tab.gallery_type == 'gallery' and tab.gallery %}
+          {# Photo Gallery - Masonry Layout #}
           <div class="multimedia__gallery {% if loop.first %}is-active{% endif %}" data-gallery="{{ loop.index0 }}" role="tabpanel">
             {% for image in tab.gallery %}
               {% set img_url = image.url ?? image %}
@@ -98,26 +87,6 @@
           </div>
         {% endif %}
       {% endfor %}
-
-    {% elseif videos is defined and videos|length > 0 %}
-      <div class="multimedia__videos is-active" data-gallery="0" role="tabpanel">
-        {% for video in videos %}
-          {% set v_url = video.video_url ?? '' %}
-          {% set v_title = video.video_title ?? 'Video' %}
-          {% if v_url %}
-            <div class="multimedia__video-item">
-              <div class="multimedia__video-container">
-                <video class="multimedia__video" controls preload="metadata">
-                  <source src="{{ v_url }}" type="video/mp4">
-                  Tu navegador no soporta videos HTML5.
-                </video>
-              </div>
-              {% if v_title %}<h4 class="multimedia__video-title">{{ v_title }}</h4>{% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-
     {% else %}
       <div class="multimedia__empty is-active">
         <p>No multimedia content configured.</p>
