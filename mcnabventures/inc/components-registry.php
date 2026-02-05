@@ -340,6 +340,12 @@ function mcnab_get_registered_components() {
       'description' => 'Standalone video with poster image.',
       'file' => 'video-player.twig',
       'fields' => [
+        // agrega una url para tambien obtener el video desde una url externa
+        'video_url' => [
+          'label' => 'Video URL',
+          'type' => 'url',
+          'required' => false,
+        ],
         'video_src' => [
           'label' => 'Video (MP4)',
           'type' => 'file',
