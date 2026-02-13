@@ -14,6 +14,21 @@ if (!defined('ABSPATH')) exit;
  */
 function mcnab_get_registered_components() {
   return [
+    'active-toggle' => [
+      'slug' => 'active-toggle',
+      'location' => 'page',
+      'name' => 'Active Toggle',
+      'description' => 'Boolean component: active on or off. Renders only when active.',
+      'file' => 'active-toggle.twig',
+      'fields' => [
+        'active' => [
+          'label' => 'Active',
+          'type' => 'true_false',
+          'default' => 1,
+          'required' => false,
+        ],
+      ],
+    ],
     'side-component' => [
       'slug' => 'side-component',
       'location' => 'page', // Options: 'page', 'post', ['page', 'post'], 'page_template:template-name.php', 'custom_post_type'
