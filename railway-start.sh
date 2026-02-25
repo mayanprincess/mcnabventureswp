@@ -21,16 +21,21 @@ max_input_time=${PHP_MAX_INPUT_TIME}
 max_input_vars=${PHP_MAX_INPUT_VARS}
 EOF
 
-# Run the official WordPress entrypoint logic once to:
-# - copy WP core from /usr/src/wordpress -> /var/www/html if missing
-# - perform any required setup
-#
-# We run it in a subshell because it `exec`s the command you pass.
-# `php-fpm -D` daemonizes and returns, leaving php-fpm running.
-( /usr/local/bin/docker-entrypoint.sh php-fpm -D )
+# Copy WP core from /usr/src/wordpress -> /var/www/html if missing.
+# We do this manually (instead of relying on the official entrypoint) to guarantee
+# that our custom wp-config.php is never overwritten by the entrypoint's auto-generator,
+# which would produce random salts on each deploy and invalidate all admin sessions.
+if [ ! -e /var/www/html/index.php ] || [ ! -e /var/www/html/wp-includes/version.php ]; then
+  echo "WordPress not found in /var/www/html - copying now..."
+  cp -a /usr/src/wordpress/. /var/www/html/
+  chown -R www-data:www-data /var/www/html
+fi
 
-# If wp-content is persisted as a volume in Railway, we still want the theme from the image
-# to be updated on every deploy. We sync the theme into the volume on boot.
+# Always overwrite wp-config.php with our versioned config to guarantee salts
+# and DB settings are correct regardless of what the previous deploy left behind.
+cp -f /usr/src/wordpress/wp-config.php /var/www/html/wp-config.php
+
+# Sync the theme on every deploy so code changes take effect immediately.
 export SYNC_THEME_ON_BOOT="${SYNC_THEME_ON_BOOT:-1}"
 if [ "${SYNC_THEME_ON_BOOT}" = "1" ]; then
   if [ -d "/usr/src/wordpress/wp-content/themes/mcnabventures" ]; then
@@ -39,6 +44,9 @@ if [ "${SYNC_THEME_ON_BOOT}" = "1" ]; then
     cp -a /usr/src/wordpress/wp-content/themes/mcnabventures /var/www/html/wp-content/themes/mcnabventures
   fi
 fi
+
+# Start PHP-FPM as a daemon
+php-fpm -D
 
 # Render nginx config with Railway PORT
 envsubst '${PORT} ${CLIENT_MAX_BODY_SIZE}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
