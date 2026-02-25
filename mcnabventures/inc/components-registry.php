@@ -1134,6 +1134,25 @@ function mcnab_get_registered_components() {
         ],
       ],
     ],
+    'normal-content' => [
+      'slug'        => 'normal-content',
+      'location'    => 'page',
+      'name'        => 'Normal Content',
+      'description' => 'Simple content block with a heading and rich text body.',
+      'file'        => 'normal-content.twig',
+      'fields'      => [
+        'heading' => [
+          'label'    => 'Heading',
+          'type'     => 'text',
+          'required' => false,
+        ],
+        'content' => [
+          'label'    => 'Content',
+          'type'     => 'wysiwyg',
+          'required' => false,
+        ],
+      ],
+    ],
     'the-experiences' => [
       'slug' => 'the-experiences',
       'location' => 'page',

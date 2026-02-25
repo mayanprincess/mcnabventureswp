@@ -1,0 +1,16 @@
+{# Normal Content — Simple heading + rich text body block #}
+<section class="normal-content" data-scroll-reveal="up">
+  <div class="container">
+
+    {% if heading %}
+      <h2 class="normal-content__heading">{{ heading }}</h2>
+    {% endif %}
+
+    {% if content %}
+      <div class="normal-content__body">
+        {{ content|raw }}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
