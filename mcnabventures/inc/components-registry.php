@@ -882,6 +882,16 @@ function mcnab_get_registered_components() {
               'type' => 'url',
               'required' => false,
             ],
+            'href_2' => [
+              'label' => 'Link 2',
+              'type' => 'url',
+              'required' => false,
+            ],
+            'href_3' => [
+              'label' => 'Link 3',
+              'type' => 'url',
+              'required' => false,
+            ],
           ],
         ],
       ],
