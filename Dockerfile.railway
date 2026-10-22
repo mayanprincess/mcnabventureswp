@@ -33,7 +33,8 @@ RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --opt
 ############################
 # 3) Runtime (WordPress PHP-FPM + Nginx)
 ############################
-FROM wordpress:6.4.3-php8.2-fpm
+# Pinned to a patched PHP build (CVE-2026-109618 / CVE-2026-109619, fixed in 8.2.35).
+FROM wordpress:7.1.3-php8.2-fpm
 
 # Install nginx
 RUN set -eux; \
